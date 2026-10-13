@@ -2,6 +2,10 @@
 // style as the 76 picture words (three of them reuse those drawings), then given a
 // white die-cut edge so they read as stickers on the yard.
 import { pictureShapes } from './pictures.js';
+import { BEACH_SEA } from './stickers-beach-sea.js';
+import { FARM_SNOW } from './stickers-farm-snow.js';
+import { SPACE_CAMP } from './stickers-space-camp.js';
+import { CITY_GARDEN } from './stickers-city-garden.js';
 
 const INK = '#23304a';
 const OWN = {
@@ -76,7 +80,21 @@ const BORROWED = Object.fromEntries(['frog', 'pond', 'cat', 'dog', 'duck', 'chic
 BORROWED.ladybug = 'bug';
 const ANIMALS = new Set(['bird', 'snail', 'ladybug', 'bunny', 'frog', 'butterfly', 'cat', 'dog', 'duck', 'chick', 'hen', 'pig', 'fox', 'crab', 'fish', 'slug', 'zebra', 'octopus', 'snake']);
 
-export const STICKERS = [...Object.keys(OWN), ...Object.keys(BORROWED)].map(id => ({ id, set: ANIMALS.has(id) ? 'animal' : 'garden' }));
+// Drawn sticker sets, grouped by the place they suit best. Every sticker can go anywhere.
+const SETS = { beachSea: BEACH_SEA, farmSnow: FARM_SNOW, spaceCamp: SPACE_CAMP, cityGarden: CITY_GARDEN };
+const FIRST = [...Object.keys(OWN), ...Object.keys(BORROWED)];
+for (const set of Object.values(SETS)) Object.assign(OWN, set);
+// Which place each sticker suits, so the picker can offer stickers that fit where she
+// is. Each set file lists its first place's stickers, then its second's, starting at
+// the sticker named here.
+const SPLIT = { beachSea: ['beach', 'sea', 'whale'], farmSnow: ['farm', 'snow', 'snowman'], spaceCamp: ['space', 'camp', 'tent2'], cityGarden: ['park', 'yard', 'pizza-slice'] };
+const PLACE_OF = {};
+for (const [set, [first, second, from]] of Object.entries(SPLIT)) {
+  let place = first;
+  for (const id of Object.keys(SETS[set])) { if (id === from) place = second; PLACE_OF[id] = place; }
+}
+const placesOf = id => [PLACE_OF[id] ?? 'yard'];
+export const STICKERS = [...FIRST, ...Object.values(SETS).flatMap(set => Object.keys(set))].map(id => ({ id, set: ANIMALS.has(id) ? 'animal' : 'garden', places: placesOf(id) }));
 
 function colouredShapes(id) {
   if (BORROWED[id]) return pictureShapes(BORROWED[id]);
@@ -98,11 +116,14 @@ export function stickerSvg(id, { shiny = false, size = 72 } = {}) {
   return `<svg class="sticker${shiny ? ' shiny' : ''}" viewBox="-8 -8 116 116" width="${size}" height="${size}" aria-hidden="true">${edge(g, shiny ? '#ffd84d' : '#fff')}${g}${extra}</svg>`;
 }
 
-// Three different stickers to choose from. randomInts lets tests pin the choice.
-export function offerThree(randomInts = n => crypto.getRandomValues(new Uint32Array(n))) {
-  const pool = STICKERS.map(s => s.id);
+// Three different stickers to choose from: two that suit the place she is decorating
+// and one from anywhere. randomInts lets tests pin the choice.
+export function offerThree(randomInts = n => crypto.getRandomValues(new Uint32Array(n)), place = null) {
   const r = randomInts(3);
+  const fits = STICKERS.filter(s => !place || s.places.includes(place)).map(s => s.id);
   const out = [];
-  for (let i = 0; i < 3; i++) out.push(pool.splice(r[i] % pool.length, 1)[0]);
+  for (let i = 0; i < 2; i++) out.push(fits.splice(r[i] % fits.length, 1)[0]);
+  const rest = STICKERS.map(s => s.id).filter(id => !out.includes(id));
+  out.push(rest[r[2] % rest.length]);
   return out;
 }

@@ -83,6 +83,51 @@ try {
   check(p1.errors.length === 0, `errors while playing clips: ${p1.errors.join('; ')}`);
   await p1.context().close();
 
+  // 2b. Your recorded voice: with every piece recorded, the quest is read from the
+  // recordings and the device voice stays quiet; with one piece missing, that line
+  // falls back to the device voice.
+  const tone = (() => {
+    const rate = 8000, n = 1200, buf = Buffer.alloc(44 + n * 2);
+    buf.write('RIFF', 0); buf.writeUInt32LE(36 + n * 2, 4); buf.write('WAVEfmt ', 8); buf.writeUInt32LE(16, 16); buf.writeUInt16LE(1, 20); buf.writeUInt16LE(1, 22);
+    buf.writeUInt32LE(rate, 24); buf.writeUInt32LE(rate * 2, 28); buf.writeUInt16LE(2, 32); buf.writeUInt16LE(16, 34); buf.write('data', 36); buf.writeUInt32LE(n * 2, 40);
+    for (let i = 0; i < n; i++) buf.writeInt16LE(Math.round(Math.sin(i / 4) * 8000), 44 + i * 2);
+    return `data:audio/wav;base64,${buf.toString('base64')}`;
+  })();
+  const { pieces } = JSON.parse(await readFile(join(root, 'voice-pieces.json'), 'utf8'));
+  const full = { version: 1, clips: Object.fromEntries(pieces.map(p => [p.key, { src: tone, start: 0, end: 0.15, gain: 1 }])) };
+  const withVoice = async bundle => {
+    const ctx = await browser.newContext({ viewport: { width: 390, height: 844 } });
+    await ctx.addInitScript(fakeVoice(EN));
+    await ctx.addInitScript(v => localStorage.setItem('backyard', v), JSON.stringify(store(kid({ chosenNode: 'on-k-math/A6.3' }))));
+    await ctx.route('**/voice.json', r => r.fulfill({ contentType: 'application/json', body: JSON.stringify(bundle) }));
+    const page = await ctx.newPage();
+    page.errors = [];
+    page.on('pageerror', e => page.errors.push(e.message));
+    await page.goto(`http://127.0.0.1:${server.address().port}/index.html?test`);
+    await page.waitForFunction(() => window.__by?.ready);
+    await page.click('#play');
+    await page.waitForSelector('[data-screen="quest"]');
+    await page.waitForTimeout(300);
+    return page;
+  };
+  const pv1 = await withVoice(full);
+  const voiced = await pv1.evaluate(() => window.__by.voiced);
+  const tts = await pv1.evaluate(() => window.__speech.filter(s => s.text).length);
+  check(voiced.length >= 1 && tts === 0, `with every piece recorded the quest still used the device voice (${voiced.length} voiced, ${tts} device)`);
+  check(pv1.errors.length === 0, `errors playing the recorded voice: ${pv1.errors.join('; ')}`);
+  const firstLine = voiced[0];
+  await pv1.context().close();
+  const { speechPieces } = await import('./voice.js');
+  // Every counting prompt starts "How many", so leaving that piece out must send the
+  // next quest's first line to the device voice whatever it counts.
+  const missingKey = speechPieces(firstLine)[0].key;
+  check(missingKey === 'p:how many', `unexpected first piece ${missingKey}`);
+  const partial = { version: 1, clips: Object.fromEntries(Object.entries(full.clips).filter(([k]) => k !== missingKey)) };
+  const pv2 = await withVoice(partial);
+  const spokenByDevice = await pv2.evaluate(() => window.__speech.filter(s => s.text).map(s => s.text));
+  check(spokenByDevice.length === 1 && spokenByDevice[0].startsWith('How many'), `a line with a missing piece was not read by the device voice: ${JSON.stringify(spokenByDevice)}`);
+  await pv2.context().close();
+
   // 3. Voice off: nothing is spoken at all.
   const p2 = await open('index.html?test', store(kid({ chosenNode: 'on-k-math/A6.3' }), { voiceOff: true }), EN);
   await p2.waitForFunction(() => window.__by?.ready);
@@ -105,6 +150,21 @@ try {
   let n = await note(EN, true);
   check(n.voice.includes('Nora') && n.voice.includes('en-CA'), `voice note with an en-CA voice: "${n.voice}"`);
   check(n.sounds === 'All 28 letter sounds are ready.', `sound count with clips: "${n.sounds}"`);
+  // Picking a voice by name: the chosen one reads the quest, ahead of en-CA.
+  const pv = await open('parent.html', store(kid()), EN);
+  await pv.waitForFunction(() => window.__parentReady);
+  await pv.click('[data-tab="settings"]');
+  await pv.selectOption('#voice-pick', 'Samantha');
+  check((await pv.textContent('#voice-note')).includes('Samantha'), 'choosing a voice did not change the note');
+  const saved = await pv.evaluate(() => JSON.parse(localStorage.getItem('backyard')).settings.voiceName);
+  await pv.context().close();
+  check(saved === 'Samantha', 'the chosen voice was not saved');
+  const pq = await open('index.html?test', { ...store(kid({ chosenNode: 'on-k-math/A6.3' })), settings: { pin: '1234', voiceOff: false, voiceName: 'Samantha' } }, EN);
+  await pq.waitForFunction(() => window.__by?.ready);
+  await pq.click('#play');
+  await pq.waitForSelector('[data-screen="quest"]');
+  check((await pq.evaluate(() => window.__speech.filter(s => s.text).at(-1).lang)) === 'en-US', 'the quest did not use the chosen voice');
+  await pq.context().close();
   n = await note([{ name: 'Amélie', lang: 'fr-CA' }], false);
   check(n.voice.startsWith('This device has no English voice'), `voice note with only French: "${n.voice}"`);
   check(n.sounds.startsWith('0 of 28 letter sounds are ready'), `sound count without clips: "${n.sounds}"`);

@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "jurisdiction": "noorani",
+  "grade": "any",
+  "subject": "arabic",
+  "document": "Noorani Qaida (Qaida Noorania), by Maulavi Noor Muhammad",
+  "sourceUrl": "https://quransheikh.com/noorani-qaida",
+  "documentUrl": "https://quransheikh.com/noorani-qaida",
+  "checkedOn": "2026-10-13",
+  "checkedBy": "Opus build session. Lesson order (17 lessons, starting with single letters, joined letters, the muqatta'at and the short vowels) from published Noorani Qaida lesson guides. The letters and words here have not yet been checked by a teacher.",
+  "partial": "Lessons 1 to 4. The device's Arabic voice reads for now; recordings by a teacher or parent come later.",
+  "optional": true,
+  "expectations": [
+    {
+      "code": "Q1",
+      "overall": "Q",
+      "strand": "Noorani Qaida",
+      "label": "Lesson 1: the single letters, alif to yaa",
+      "note": "The 29 letters in the Qaida's order. Look-alike letters (ب ت ث, ج ح خ and so on) are offered together.",
+      "prerequisites": [],
+      "skills": [
+        {
+          "template": "arabic",
+          "params": {
+            "mode": "letter"
+          }
+        }
+      ]
+    },
+    {
+      "code": "Q2",
+      "overall": "Q",
+      "strand": "Noorani Qaida",
+      "label": "Lesson 2: letters joined together",
+      "note": "Two letters written joined, as inside a word.",
+      "prerequisites": [
+        "Q1"
+      ],
+      "skills": [
+        {
+          "template": "arabic",
+          "params": {
+            "mode": "joined"
+          }
+        }
+      ]
+    },
+    {
+      "code": "Q3",
+      "overall": "Q",
+      "strand": "Noorani Qaida",
+      "label": "Lesson 3: the opening letters of surahs (muqatta'at)",
+      "note": "The 14 letter groups, such as الم and يس, read as letter names.",
+      "prerequisites": [
+        "Q2"
+      ],
+      "skills": [
+        {
+          "template": "arabic",
+          "params": {
+            "mode": "muqattaat"
+          }
+        }
+      ]
+    },
+    {
+      "code": "Q4",
+      "overall": "Q",
+      "strand": "Noorani Qaida",
+      "label": "Lesson 4: the short vowels, fatha, kasra and damma",
+      "note": "One letter with each vowel mark: ba, bi, bu.",
+      "prerequisites": [
+        "Q3"
+      ],
+      "skills": [
+        {
+          "template": "arabic",
+          "params": {
+            "mode": "harakat"
+          }
+        }
+      ]
+    }
+  ]
+}

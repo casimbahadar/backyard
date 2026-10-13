@@ -54,6 +54,7 @@ async function answer(page, correct) {
       used.add(i);
       await tap(page, `.tiles button:nth-child(${i + 1})`);
     }
+    await tap(page, '#spell-check');
   } else {
     const right = await page.evaluate(() => window.__by.answerIndex);
     const pick = correct ? right : (right + 1) % item.choices.length;
@@ -138,6 +139,15 @@ try {
   for (let i = 1; i < 8; i++) await answer(page, ![1, 2].includes(i));
   await page.waitForFunction(() => document.querySelectorAll('.stars .star').length === 3, null, { timeout: 8000 });
   check(await page.$$eval('.stars .star.on', e => e.length) === 2, '5 of 8 right did not give 2 stars');
+  // 5 of 8 is under 70%: no sticker, a Try again button, and it does not count toward the goal.
+  await page.waitForSelector('#again', { timeout: 8000 });
+  check(await page.$('[data-screen="pick"]') === null, '5 of 8 right still gave a sticker');
+  check((await page.textContent('#end-line')).includes('Get six right to earn a sticker'), 'the end line did not say how many to get right');
+  check(Object.values((await state(page)).profiles[0].days)[0].quests === 1, 'a quest under 70% counted toward the daily goal');
+  await tap(page, '#again');
+  await page.waitForSelector('[data-screen="quest"]');
+  // 6 of 8 is enough: a sticker, not shiny.
+  for (let i = 0; i < 8; i++) await answer(page, ![1, 2].includes(i));
   await page.waitForSelector('[data-screen="pick"]', { timeout: 8000 });
   check(await page.$$eval('.sticker-choice .sticker.shiny', e => e.length) === 0, 'imperfect quest gave a shiny sticker');
   await tap(page, '.sticker-choice');
@@ -177,7 +187,7 @@ try {
   s1 = await state(page);
   const p1 = s1.profiles[0];
   check(p1.stickers.length === 3, `expected 3 stickers after the goal, found ${p1.stickers.length}`);
-  check(Object.values(p1.attempts).flat().length === 4, 'not every quest was recorded as an attempt');
+  check(Object.values(p1.attempts).flat().length === 5, 'not every quest was recorded as an attempt (the one under 70% still counts for learning)');
   check(page.dialogs.length === 0 && page.errors.length === 0, `errors or dialogs: ${[...page.errors, ...page.dialogs].join('; ')}`);
   await page.context().close();
 
@@ -249,7 +259,83 @@ try {
   check(secs >= 78 && secs <= 82, `eight questions at ten seconds counted ${secs} seconds, not about 80`);
   await pmin.context().close();
 
-  // 11. Practice share in a scripted ten-minute session on a fake clock.
+  // 11. Spelling: a mis-tapped letter comes back out when tapped, and nothing is checked
+  // until the tick.
+  const ps = await open({ version: 3, sheets: {}, results: {}, activeProfile: 'ps', settings: { pin: null, voiceOff: false, theme: 'bright' },
+    profiles: [{ ...p1, id: 'ps', name: 'Ava', quest: null, days: {}, stickers: [], taughtCount: 32, chosenNode: 'on-1-language/B2.4', grade: '1' }] });
+  await ps.click('#play');
+  await ps.waitForSelector('[data-screen="quest"]');
+  for (let n = 0; n < 2 && (await ps.evaluate(() => window.__by.item.template)) !== 'spell-cvc'; n++) {
+    await ps.click(`[data-choice="${await ps.evaluate(() => window.__by.answerIndex)}"]`);
+    await ps.waitForFunction(k => document.querySelectorAll('.pip.done').length === k, n + 1, { timeout: 8000 });
+  }
+  const sp = await ps.evaluate(() => window.__by.item);
+  const at = await ps.evaluate(() => document.querySelectorAll('.pip.done').length);
+  check(sp.template === 'spell-cvc', 'no spelling question to test undo on');
+  const tileOf = (t, used) => sp.tiles.findIndex((x, j) => x === t && !used.has(j));
+  const usedT = new Set();
+  const wrongTile = sp.tiles.findIndex(x => !sp.answer.includes(x));
+  await ps.click(`.tiles button:nth-child(${wrongTile + 1})`);
+  check((await ps.textContent('[data-slot="0"]')) === sp.tiles[wrongTile], 'the tapped letter did not go into the first box');
+  await ps.click('[data-slot="0"]');
+  check((await ps.textContent('[data-slot="0"]')) === '' && !(await ps.$eval(`.tiles button:nth-child(${wrongTile + 1})`, b => b.disabled)), 'tapping the letter in the box did not take it back out');
+  for (const t of sp.answer) { const k = tileOf(t, usedT); usedT.add(k); await ps.click(`.tiles button:nth-child(${k + 1})`); }
+  check(await ps.$eval('#spell-check', b => !b.hidden), 'the tick did not appear when every box was full');
+  check((await ps.evaluate(() => document.querySelectorAll('.pip.done').length)) === at, 'spelling was checked before the tick was tapped');
+  await ps.click('#spell-check');
+  await ps.waitForFunction(k => document.querySelectorAll('.pip.done').length === k + 1, at, { timeout: 8000 });
+  const sAns = (await state(ps)).profiles[0].quest.answers;
+  check(sAns[at] === true, 'a word spelled right after an undo was not marked right');
+  check(ps.errors.length === 0, `errors while spelling: ${ps.errors.join('; ')}`);
+  await ps.context().close();
+
+  // 12. Noorani Qaida: switched on for a child, a lesson 1 quest shows Arabic letters and
+  // reads the letter name in the Arabic voice after the English instruction.
+  const pn = await open({ version: 3, sheets: {}, results: {}, activeProfile: 'pn', settings: { pin: null, voiceOff: false, theme: 'bright' },
+    profiles: [{ ...p1, id: 'pn', name: 'Ava', quest: null, days: {}, stickers: [], noorani: true, chosenNode: 'noorani/Q1' }] });
+  await pn.click('#play');
+  await pn.waitForSelector('[data-screen="quest"]');
+  const ai = await pn.evaluate(() => window.__by.item);
+  check(ai.template === 'arabic' && (await pn.$$eval('.choice.arabic', e => e.map(x => x.textContent))).includes(ai.answer), 'the Arabic lesson did not show Arabic letters');
+  await pn.waitForFunction(() => window.__by.arabic.length > 0, null, { timeout: 4000 });
+  check((await pn.evaluate(() => window.__by.arabic[0])) === ai.prompt.arabic, 'the Arabic letter name was not read');
+  check(pn.errors.length === 0, `errors in the Arabic lesson: ${pn.errors.join('; ')}`);
+  await pn.context().close();
+
+  // 13. Sticker editing: pick one up, resize it, move it behind, drag it, put it down.
+  const pe = await open({ version: 3, sheets: {}, results: {}, activeProfile: 'pe', settings: { pin: null, voiceOff: false, theme: 'bright' },
+    profiles: [{ ...p1, id: 'pe', name: 'Ava', quest: null, days: {}, stickers: [{ id: 'cat', x: 30, y: 70 }, { id: 'dog', x: 60, y: 70 }] }] });
+  await pe.click('.placed[data-sticker="dog"]');
+  check(await pe.$('#st-bigger') !== null && await pe.$('#play') === null, 'tapping a sticker did not show the sticker tools');
+  await pe.click('#st-bigger'); await pe.click('#st-bigger');
+  await pe.click('#st-back');
+  let es = await state(pe);
+  check(es.profiles[0].stickers[0].id === 'dog' && es.profiles[0].stickers[0].size === 1.4, `resize and send back did not save: ${JSON.stringify(es.profiles[0].stickers)}`);
+  check(await pe.$eval('.yard-scene .placed', n => n.dataset.sticker) === 'dog', 'the sticker sent back is not drawn first');
+  const sb = await pe.locator('.yard-scene').boundingBox();
+  const db = await pe.locator('.placed[data-sticker="dog"]').boundingBox();
+  await pe.mouse.move(db.x + db.width / 2, db.y + db.height / 2); await pe.mouse.down();
+  await pe.mouse.move(sb.x + sb.width * 0.5, sb.y + sb.height * 0.4, { steps: 6 }); await pe.mouse.up();
+  es = await state(pe);
+  check(Math.abs(es.profiles[0].stickers[0].x - 50) < 3 && Math.abs(es.profiles[0].stickers[0].y - 40) < 3, `dragging did not move the sticker: ${es.profiles[0].stickers[0].x}, ${es.profiles[0].stickers[0].y}`);
+  await pe.click('#st-done');
+  check(await pe.$('#play') !== null, 'Done did not bring Play back');
+  // Places: each has its own stickers.
+  await pe.click('#places');
+  await pe.waitForSelector('[data-screen="places"]');
+  check(await pe.$$eval('.place-btn', e => e.length) === 8, 'the places chooser does not show 8 places');
+  await pe.click('[data-place="beach"]');
+  await pe.waitForSelector('#play');
+  check(await pe.$$eval('.yard-scene .placed', e => e.length) === 0, 'yard stickers showed on the beach');
+  check((await state(pe)).profiles[0].scene === 'beach', 'the chosen place was not saved');
+  await pe.click('#places');
+  await pe.click('[data-place="yard"]');
+  await pe.waitForSelector('#play');
+  check(await pe.$$eval('.yard-scene .placed', e => e.length) === 2, 'the yard lost its stickers after visiting the beach');
+  check(pe.errors.length === 0, `errors while editing stickers: ${pe.errors.join('; ')}`);
+  await pe.context().close();
+
+  // 14. Practice share in a scripted ten-minute session on a fake clock.
   // Dwell times are the script's assumptions: 7 s per question, 3 s choosing a
   // sticker, 4 s placing it, 3 s in the yard before Play. The app's own waits run as they are.
   const pt = await open();
@@ -272,6 +358,7 @@ try {
       if (item.template === 'spell-cvc') {
         const used = new Set();
         for (const t of item.answer) { const k = item.tiles.findIndex((x, j) => x === t && !used.has(j)); used.add(k); await pt.click(`.tiles button:nth-child(${k + 1})`); }
+        await pt.click('#spell-check');
       } else await pt.click(`[data-choice="${await pt.evaluate(() => window.__by.answerIndex)}"]`);
       await pt.clock.runFor(i === 7 ? 50 : 400);
     }

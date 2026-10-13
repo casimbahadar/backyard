@@ -6,12 +6,19 @@ let voice = null;
 let voicesKnown = false;
 const listeners = new Set();
 
+// A parent can pick which installed voice reads aloud; otherwise Canadian English first.
+let preferred = null;
+export function preferVoice(name) { preferred = name || null; pickVoice(); }
+export function englishVoices() {
+  return window.speechSynthesis ? speechSynthesis.getVoices().filter(v => v.lang?.startsWith('en')).map(v => ({ name: v.name, lang: v.lang })) : [];
+}
+
 function pickVoice() {
   if (!window.speechSynthesis) return;
   const voices = speechSynthesis.getVoices();
   if (!voices.length) return;
   voicesKnown = true;
-  voice = voices.find(v => v.lang === 'en-CA') ?? voices.find(v => v.lang?.startsWith('en-')) ?? voices.find(v => v.lang?.startsWith('en')) ?? null;
+  voice = voices.find(v => v.name === preferred && v.lang?.startsWith('en')) ?? voices.find(v => v.lang === 'en-CA') ?? voices.find(v => v.lang?.startsWith('en-')) ?? voices.find(v => v.lang?.startsWith('en')) ?? null;
   for (const f of listeners) f();
 }
 if (window.speechSynthesis) {
@@ -51,6 +58,7 @@ export function unlock() {
 export function speak(text, { off = false, log } = {}) {
   log?.(text);
   if (off || !window.speechSynthesis || !window.SpeechSynthesisUtterance) return;
+  stopVoice();
   try {
     speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
@@ -79,15 +87,19 @@ export async function clipSet(deviceClips = {}) {
   return new Set([...Object.keys(await repoBundle()), ...Object.keys(deviceClips)]);
 }
 
+// A letter sound is either a plain recording (the repo's clips.json) or a clip recorded
+// in Grown-ups with where the sound starts and ends and how loud to play it.
 async function buffer(phoneme, deviceClips) {
-  const src = deviceClips[phoneme] ?? (await repoBundle())[phoneme];
-  if (!src || !ctx) return null;
-  const key = `${phoneme}:${src.length}:${src.slice(-24)}`;
-  if (decoded.has(key)) return decoded.get(key);
-  const bytes = Uint8Array.from(atob(src.split(',')[1]), c => c.charCodeAt(0));
-  const buf = await ctx.decodeAudioData(bytes.buffer);
-  decoded.set(key, buf);
-  return buf;
+  const raw = deviceClips[phoneme] ?? (await repoBundle())[phoneme];
+  if (!raw || !ctx) return null;
+  const c = typeof raw === 'string' ? { src: raw } : raw;
+  const key = `${phoneme}:${c.src.length}:${c.src.slice(-24)}`;
+  let buf = decoded.get(key);
+  if (!buf) {
+    buf = await ctx.decodeAudioData(Uint8Array.from(atob(c.src.split(',')[1]), ch => ch.charCodeAt(0)).buffer);
+    decoded.set(key, buf);
+  }
+  return { buf, start: c.start ?? 0, len: (c.end ?? buf.duration) - (c.start ?? 0), gain: c.gain ?? 1 };
 }
 
 // Plays the sounds one after another with a short gap, like a teacher saying
@@ -101,10 +113,12 @@ export async function playSounds(phonemes, deviceClips = {}, { gap = 0.35, log }
     const b = await buffer(p, deviceClips).catch(() => null);
     if (!b) continue;
     const s = ctx.createBufferSource();
-    s.buffer = b;
-    s.connect(ctx.destination);
-    s.start(t);
-    t += b.duration + gap;
+    const g = ctx.createGain();
+    g.gain.value = b.gain;
+    s.buffer = b.buf;
+    s.connect(g); g.connect(ctx.destination);
+    s.start(t, b.start, b.len);
+    t += b.len + gap;
   }
   await new Promise(r => setTimeout(r, Math.max(0, (t - ctx.currentTime) * 1000)));
 }
@@ -119,4 +133,59 @@ export function phonemeList(order, firstSounds) {
     seen.set(g.phoneme, { phoneme: g.phoneme, grapheme: g.grapheme, example });
   }
   return [...seen.values()];
+}
+
+// ---------- recorded voice ----------
+// Pieces recorded in Grown-ups, Settings, each with where its speech starts and ends and
+// how loud to play it. A line plays as one run of pieces with a short gap between.
+const voiceDecoded = new Map();
+let voiceSources = [];
+export function stopVoice() {
+  for (const s of voiceSources) { try { s.stop(); } catch { /* already ended */ } }
+  voiceSources = [];
+}
+export const audioReady = () => !!ctx;
+export async function playVoice(list, { gap = 0.06 } = {}) {
+  if (!ctx) return false;
+  stopVoice();
+  try { if (window.speechSynthesis) speechSynthesis.cancel(); } catch { /* nothing to cancel */ }
+  const mine = [];
+  voiceSources = mine;
+  let t = ctx.currentTime + 0.03;
+  for (const c of list) {
+    const key = `${c.src.length}:${c.src.slice(-32)}`;
+    let buf = voiceDecoded.get(key);
+    if (!buf) {
+      try { buf = await ctx.decodeAudioData(Uint8Array.from(atob(c.src.split(',')[1]), ch => ch.charCodeAt(0)).buffer); } catch { buf = null; }
+      if (buf) voiceDecoded.set(key, buf);
+    }
+    if (voiceSources !== mine) return true; // a newer line started; this one stops
+    if (!buf) continue;
+    const s = ctx.createBufferSource();
+    const g = ctx.createGain();
+    g.gain.value = c.gain ?? 1;
+    s.buffer = buf; s.connect(g); g.connect(ctx.destination);
+    const len = Math.max(0.05, (c.end ?? buf.duration) - (c.start ?? 0));
+    s.start(Math.max(t, ctx.currentTime), c.start ?? 0, len);
+    mine.push(s);
+    t = Math.max(t, ctx.currentTime) + len + gap;
+  }
+  return true;
+}
+
+// ---------- Arabic ----------
+// The Noorani Qaida lessons are read by the device's Arabic voice for now. iPhones and
+// iPads include one (add more in Settings, Accessibility, Spoken Content, Voices).
+export const arabicVoice = () => (window.speechSynthesis ? speechSynthesis.getVoices().find(v => v.lang?.startsWith('ar')) ?? null : null);
+export function speakArabic(text, { off = false, log } = {}) {
+  log?.(text);
+  if (off || !window.speechSynthesis || !window.SpeechSynthesisUtterance) return;
+  try {
+    const u = new SpeechSynthesisUtterance(text);
+    const v = arabicVoice();
+    u.lang = v?.lang ?? 'ar-SA';
+    try { if (v) u.voice = v; } catch { /* keep the language */ }
+    u.rate = 0.8;
+    speechSynthesis.speak(u);
+  } catch { /* stay silent rather than break the screen */ }
 }

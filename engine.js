@@ -15,10 +15,11 @@ import * as belongs from './belongs.js';
 import * as money from './money.js';
 import * as fixSentence from './fix-sentence.js';
 import * as sightWord from './sight-word.js';
+import * as arabic from './arabic.js';
 
 export const TEMPLATES = Object.fromEntries(
   [countSet, compare, numberFacts, patternNext, nameShape,
-    hearFirstSound, blendWord, readCvc, spellCvc, readSentence, traceLetter, measure, belongs, money, fixSentence, sightWord].map(m => [m.id, m])
+    hearFirstSound, blendWord, readCvc, spellCvc, readSentence, traceLetter, measure, belongs, money, fixSentence, sightWord, arabic].map(m => [m.id, m])
 );
 
 // Builds count items for one skill from one seed. The same seed string always

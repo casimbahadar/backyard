@@ -63,12 +63,14 @@ export function problemWith(d) {
     if (!isObj(p) || typeof p.id !== 'string' || typeof p.name !== 'string' || p.name.length > 40) return 'a child record is broken';
     if (!['k', '1'].includes(p.grade)) return 'a child has an unknown grade';
     if (!Number.isInteger(p.taughtCount) || p.taughtCount < 1 || p.taughtCount > 64) return 'a sound count is out of range';
+    if (p.taughtSounds !== undefined && (!Array.isArray(p.taughtSounds) || !p.taughtSounds.every(i => Number.isInteger(i) && i >= 0 && i < 64))) return 'the chosen sounds are broken';
     if (!Number.isInteger(p.dailyGoal) || p.dailyGoal < 1 || p.dailyGoal > (p.goalType === 'minutes' ? 60 : 12)) return 'a daily goal is out of range';
     if (p.goalType && !['quests', 'minutes'].includes(p.goalType)) return 'a daily goal has an unknown kind';
     if (!isObj(p.attempts) || !Array.isArray(p.stickers) || !Array.isArray(p.readWords)) return 'a child record is broken';
-    for (const st of p.stickers) if (!isObj(st) || typeof st.id !== 'string' || typeof st.x !== 'number' || typeof st.y !== 'number') return 'a sticker is broken';
+    for (const st of p.stickers) if (!isObj(st) || typeof st.id !== 'string' || typeof st.x !== 'number' || typeof st.y !== 'number' || (st.scene != null && typeof st.scene !== 'string') || (st.size != null && typeof st.size !== 'number')) return 'a sticker is broken';
   }
   if (d.settings.pin !== null && !/^\d{4}$/.test(String(d.settings.pin))) return 'the PIN is not four numbers';
   if (d.settings.theme && !['bright', 'calm', 'clear'].includes(d.settings.theme)) return 'unknown theme';
+  if (d.settings.voiceName != null && (typeof d.settings.voiceName !== 'string' || d.settings.voiceName.length > 120)) return 'the voice name is broken';
   return null;
 }

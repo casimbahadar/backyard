@@ -10,7 +10,7 @@ const packDir = root;
 // The templates release one knows about. A pack naming anything else fails.
 const TEMPLATES = new Set([
   'hear-first-sound', 'blend-word', 'read-cvc', 'spell-cvc', 'read-sentence',
-  'trace-letter', 'count-set', 'number-facts', 'compare', 'pattern-next', 'name-shape', 'measure', 'belongs', 'money', 'fix-sentence', 'sight-word'
+  'trace-letter', 'count-set', 'number-facts', 'compare', 'pattern-next', 'name-shape', 'measure', 'belongs', 'money', 'fix-sentence', 'sight-word', 'arabic'
 ]);
 
 // Codes confirmed on 2026-10-11 against the official PDF, The Ontario Curriculum,
@@ -65,12 +65,14 @@ function validate(file) {
   const pack = JSON.parse(raw);
 
   const expectedName = `${pack.jurisdiction}-${pack.grade}-${pack.subject}.json`;
-  check(file === expectedName, `${file}: name should be ${expectedName}`);
+  if (pack.jurisdiction === 'on') check(file === expectedName, `${file}: name should be ${expectedName}`);
+  else check(file === `${pack.jurisdiction}.json`, `${file}: name should be ${pack.jurisdiction}.json`);
   check(pack.schemaVersion === 1, `${file}: schemaVersion must be 1`);
   for (const f of ['jurisdiction', 'grade', 'subject', 'document', 'checkedBy']) checkText(`${file}.${f}`, pack[f]);
   check(/^\d{4}-\d{2}-\d{2}$/.test(pack.checkedOn ?? ''), `${file}: checkedOn must be YYYY-MM-DD`);
   for (const f of ['sourceUrl', 'documentUrl']) {
-    check(String(pack[f]).startsWith('https://www.dcp.edu.gov.on.ca/'), `${file}.${f}: must be on the Ministry site`);
+    if (pack.jurisdiction === 'on') check(String(pack[f]).startsWith('https://www.dcp.edu.gov.on.ca/'), `${file}.${f}: must be on the Ministry site`);
+    else check(String(pack[f]).startsWith('https://'), `${file}.${f}: must be an https address`);
   }
 
   const exps = pack.expectations ?? [];
@@ -78,11 +80,13 @@ function validate(file) {
   const byCode = new Map();
   for (const e of exps) {
     const w = `${file} ${e.code}`;
-    check(/^[A-F]\d+\.\d+$/.test(e.code ?? ''), `${w}: bad code format`);
+    // Ontario codes look like B2.4; the optional Noorani Qaida pack numbers its lessons Q1, Q2 and so on.
+    const ontario = pack.jurisdiction === 'on';
+    check(ontario ? /^[A-F]\d+\.\d+$/.test(e.code ?? '') : /^Q\d+$/.test(e.code ?? ''), `${w}: bad code format`);
     check(!byCode.has(e.code), `${w}: duplicate code`);
     byCode.set(e.code, e);
-    check(confirmedFor(pack)?.has(e.code), `${w}: code not in the officially confirmed list`);
-    check(e.overall === e.code.split('.')[0], `${w}: overall does not match code`);
+    if (ontario) check(confirmedFor(pack)?.has(e.code), `${w}: code not in the officially confirmed list`);
+    check(e.overall === (ontario ? e.code.split('.')[0] : 'Q'), `${w}: overall does not match code`);
     checkText(`${w}.label`, e.label);
     check(/^[A-Z]/.test(e.label ?? ''), `${w}: label should start with a capital`);
     check(!/[.]$/.test(e.label ?? ''), `${w}: label should not end with a period`);
@@ -145,7 +149,7 @@ function validate(file) {
 }
 
 try {
-  const files = readdirSync(packDir).filter(f => /^on-.*\.json$/.test(f)).sort();
+  const files = readdirSync(packDir).filter(f => /^(on-.*|noorani)\.json$/.test(f)).sort();
   for (const f of files) allPacks.set(f, JSON.parse(readFileSync(join(packDir, f), 'utf8')));
   check(files.length > 0, 'no pack files found');
   const summary = files.map(validate);

@@ -10,7 +10,7 @@ export function available() { return true; }
 // words that open with a sound you can hold (mmm, sss) are used, as the Ministry
 // continuum advises; stop sounds join once half the taught set is in.
 function pool(params, ctx) {
-  const early = params.continuousFirst && ctx.taughtCount < ctx.taughtOrder.length / 2;
+  const early = params.continuousFirst && ctx.taughtCount < (ctx.totalSounds ?? ctx.taughtOrder.length) / 2;
   const words = wordsOfShapes(params.shapes);
   return early ? words.filter(x => CONTINUOUS.has(x.phonemes[0])) : words;
 }

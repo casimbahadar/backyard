@@ -5,7 +5,7 @@ import { generate, TEMPLATES } from './engine.js';
 import { hashString } from './prng.js';
 import { contexts, SEEDS_NO_CTX, SEEDS_PER_CTX, PER_SET } from './test-cases.js';
 
-const PACKS = ['on-1-language.json', 'on-1-math.json', 'on-k-language.json', 'on-k-math.json'];
+const PACKS = ['on-1-language.json', 'on-1-math.json', 'on-k-language.json', 'on-k-math.json', 'noorani.json'];
 const out = document.getElementById('out');
 
 try {

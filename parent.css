@@ -1,3 +1,4 @@
+@font-face { font-family: "Andika"; src: url("Andika-Regular.ttf") format("truetype"); font-weight: 400; font-display: swap; }
 /* Parent area. Same family as the child app (Fredoka headings, the same ink and
    tomato), but quieter: white page, a strong left edge, no stickers. The tab bar sits
    at the bottom where a thumb reaches it. */
@@ -29,8 +30,12 @@ p { margin: 0; }
 .checks { display: flex; flex-direction: column; padding: var(--s2) 0; }
 details summary { min-height: 44px; display: flex; align-items: center; font-weight: 600; cursor: pointer; }
 .sounds { display: flex; flex-wrap: wrap; gap: var(--s1); }
-.sound { min-width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--r-small); border: 2px dashed var(--line); color: var(--soft); font: 400 18px/1 "Andika", var(--body); }
-.sound.on { border: 2px solid var(--ink); color: var(--ink); background: var(--wash); }
+.sound { width: 56px; height: 48px; padding: 0 2px; text-align: center; line-height: 1; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--r-small); border: 2px dashed var(--line); background: #fff; color: var(--soft); font: 400 20px/1 "Andika", var(--body); cursor: pointer; }
+.sound.on { border: 2px solid var(--ink); color: #fff; background: var(--ink); }
+.quick { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s2); max-width: 26rem; }
+.quick .btn.small { width: 100%; padding: 0 var(--s2); }
+.sound.long { font-size: 14px; }
+.btn.small { width: auto; min-height: 44px; font-size: 0.95rem; padding: 0 var(--s4); }
 
 .btn { font: 600 1.05rem/1 var(--display); min-height: 48px; width: 100%; border: 0; border-radius: var(--r-big); background: var(--tomato); color: #fff; padding: 0 var(--s6); box-shadow: 0 4px 0 var(--tomato-dark); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
 .btn:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--tomato-dark); }
@@ -71,6 +76,9 @@ details summary { min-height: 44px; display: flex; align-items: center; font-wei
 #print-area { position: absolute; left: -10000px; top: 0; }
 @media (min-width: 640px) {
   .node-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .parent { margin: 0 auto; }
+  .tabs { justify-content: center; }
+  .tabs button { max-width: 180px; }
   .btn { max-width: 22rem; }
   .parent { padding-left: var(--s12); padding-right: var(--s12); }
 }
@@ -88,3 +96,22 @@ details summary { min-height: 44px; display: flex; align-items: center; font-wei
 .theme-bright .swatch { background: conic-gradient(#d4441f 0 33%, #a7dcf7 0 66%, #6dbb4f 0); }
 .theme-calm .swatch { background: conic-gradient(#b5533d 0 33%, #cfe3ec 0 66%, #a3c68f 0); }
 .theme-clear .swatch { background: conic-gradient(#a3221a 0 33%, #ffffff 0 66%, #111111 0); box-shadow: inset 0 0 0 2px #111; }
+
+.to-yard { align-self: flex-start; display: inline-flex; align-items: center; gap: var(--s2); min-height: 44px; padding: 0 var(--s4); border-radius: 999px; background: var(--wash); color: var(--ink); font: 600 1rem/1 var(--display); text-decoration: none; }
+.to-yard::before { content: ""; width: 10px; height: 10px; border-left: 3px solid currentColor; border-bottom: 3px solid currentColor; transform: rotate(45deg); }
+
+/* Recorder inside Settings */
+.vgroups { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s2); position: sticky; top: 0; background: var(--page); padding: var(--s2) 0; z-index: 2; }
+.vgroups .btn.small { width: 100%; }
+.vgroups .btn[aria-current="true"] { background: var(--ink); color: #fff; box-shadow: none; }
+.vlist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.vrow { display: grid; grid-template-columns: 1fr; gap: var(--s2); padding: var(--s3) 0; border-bottom: 2px solid var(--wash); }
+.vsay { font: 600 1.35rem/1.3 var(--display); }
+.vrow.done .vsay::before { content: ""; display: inline-block; width: 12px; height: 12px; margin-right: var(--s2); border-radius: 50%; background: var(--learned); }
+.vbuttons { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s2); }
+.vbuttons.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.vbuttons .btn { width: 100%; max-width: none; }
+.vrow.recording .vbuttons .rec { background: var(--warn); box-shadow: 0 4px 0 #5a1a10; }
+button.to-yard { border: 0; cursor: pointer; }
+.vsay.ar { font: 400 2.2rem/1.6 "Noto Naskh Arabic", serif; direction: rtl; text-align: left; }
+@font-face { font-family: "Noto Naskh Arabic"; src: url("NotoNaskhArabic.ttf") format("truetype"); font-weight: 400 700; font-display: swap; }

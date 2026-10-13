@@ -34,6 +34,7 @@ h1, .title { font-family: var(--display); font-weight: 600; }
 .btn:focus-visible, .play-sticker:focus-visible, .grownups:focus-visible { outline: 4px solid var(--ink); outline-offset: 4px; }
 .btn-play { background: var(--tomato); color: var(--paper); box-shadow: 0 5px 0 var(--tomato-base); width: 100%; min-height: 64px; font-size: 1.5rem; }
 .btn-play:active { box-shadow: 0 2px 0 var(--tomato-base); }
+.btn-quiet { background: var(--paper); color: var(--ink); box-shadow: 0 5px 0 var(--base); width: 100%; min-height: 64px; font-size: 1.3rem; }
 .btn-icon { width: 56px; padding: 0; display: inline-flex; align-items: center; justify-content: center; flex: none; }
 
 /* The Play sticker: the one big thing on the yard. */
@@ -70,7 +71,7 @@ h1, .title { font-family: var(--display); font-weight: 600; }
 .yard { position: relative; max-width: none; padding: 0; min-height: 100dvh; }
 /* The drawing keeps its proportions and sits on the bottom edge; sky above it and a
    strip of meadow behind it carry the scene to any screen shape. */
-.yard-scene { position: absolute; inset: 0; overflow: hidden; touch-action: none; background: linear-gradient(var(--sky) 0 70%, var(--meadow) 70%); }
+.yard-scene { position: absolute; inset: 0; overflow: hidden; touch-action: none; background: linear-gradient(var(--place-top, var(--sky)) 0 70%, var(--meadow) 70%); }
 .yard-scene .scene-art { position: absolute; inset: 0; width: 100%; height: 100%; overflow: hidden; }
 .yard-top { position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: center;
   padding: calc(var(--s3) + env(safe-area-inset-top, 0px)) var(--s4) 0; }
@@ -79,7 +80,12 @@ h1, .title { font-family: var(--display); font-weight: 600; }
 .grownups { font: 500 1rem/1 var(--display); color: var(--ink); background: rgba(255, 255, 255, 0.85); border-radius: var(--r-round); padding: 0 var(--s4); min-height: 44px; display: inline-flex; align-items: center; text-decoration: none; }
 .yard-bottom { position: relative; z-index: 2; margin-top: auto; display: flex; justify-content: center; padding: 0 var(--s4) calc(var(--s12) + env(safe-area-inset-bottom, 0px)); pointer-events: none; }
 .yard-bottom > * { pointer-events: auto; }
-.placed, .held { position: absolute; transform: translate(-50%, -50%); z-index: 1; }
+.placed, .held { position: absolute; transform: translate(-50%, -50%) scale(var(--s, 1)); z-index: 1; }
+.placed { touch-action: none; cursor: grab; }
+.placed.picked { filter: drop-shadow(0 0 6px #fff) drop-shadow(0 0 3px var(--ink)); }
+.tools { display: flex; gap: var(--s2); justify-content: center; flex-wrap: wrap; }
+.btn.tool { width: 64px; height: 64px; border-radius: 50%; background: var(--paper); color: var(--ink); box-shadow: 0 4px 0 var(--base); display: inline-flex; align-items: center; justify-content: center; }
+#st-done { background: var(--right); color: #fff; }
 .held { pointer-events: none; z-index: 3; }
 .held.lifted .sticker { filter: drop-shadow(0 8px 6px rgba(35, 48, 74, 0.35)); transform: scale(1.08); }
 .note { background: var(--paper); border-radius: var(--r-tile); padding: var(--s4); text-align: center; }
@@ -141,6 +147,38 @@ h1, .title { font-family: var(--display); font-weight: 600; }
   .first-scene { height: 220px; }
   .play-sticker { width: 200px; height: 200px; font-size: 2.8rem; }
 }
+/* Tablets and big screens: everything scales up instead of sitting in a phone-sized
+   column. Stickers grow with the screen so the yard does not look empty. */
+.placed svg, .held svg { width: clamp(72px, 9vmin, 150px); height: auto; }
+@media (min-width: 768px) and (min-height: 700px) {
+  main { max-width: 860px; }
+  .quest { gap: var(--s6); }
+  .stage { min-height: 220px; padding: var(--s8); }
+  .stage.reading { font-size: 5.5rem; }
+  .stage.reading.sentence { font-size: 3rem; }
+  .stage .picture, .stage .tens-ones, .stage .counters svg { transform-origin: center; }
+  .stage > .picture { width: 220px; height: 220px; }
+  .stage.pattern svg, .stage.pattern .gap { max-width: 84px; }
+  .counters { max-width: 520px; }
+  .prompt { font-size: 2.1rem; }
+  .choice { min-height: 170px; border-radius: 28px; }
+  .choice.num, .choice.letter { font-size: 4.4rem; }
+  .choice.word { font-size: 3.4rem; }
+  .choice.pic .picture { max-width: 170px; }
+  .choice.pic .scene { max-width: 240px; }
+  .choice svg:not(.picture):not(.scene):not(.money) { width: 110px; height: 110px; }
+  .money-choice .money { max-width: 200px; }
+  .sentence-choice { font-size: 2.3rem; min-height: 110px; }
+  .answers { padding: var(--s12) var(--s8) calc(var(--s12) + env(safe-area-inset-bottom, 0px)); margin-left: calc(-1 * var(--s8)); margin-right: calc(-1 * var(--s8)); }
+  .btn-icon { width: 72px; height: 72px; }
+  .progress { height: 64px; }
+  .yard-top { padding: var(--s6) var(--s8); }
+  .grownups { font-size: 1.2rem; padding: var(--s3) var(--s6); }
+  .goal .dot svg { width: 40px; height: 40px; }
+  .play-sticker { width: 240px; height: 240px; font-size: 3.2rem; }
+  .sticker-choice .sticker { max-width: 160px; }
+  .btn.tool { width: 84px; height: 84px; }
+}
 @media (prefers-reduced-motion: reduce) {
   .btn, .play-sticker { transition: none; }
   .btn:active, .play-sticker:active { transform: none; }
@@ -172,3 +210,30 @@ h1, .title { font-family: var(--display); font-weight: 600; }
 [data-theme="clear"] .play-sticker, [data-theme="clear"] .star.on, [data-theme="clear"] .goal-moment .stars svg { transform: none; }
 [data-theme="clear"] .play-sticker { box-shadow: 0 0 0 4px var(--ink); }
 [data-theme="clear"] * { transition: none !important; animation: none !important; }
+
+.slot-row { display: flex; justify-content: center; align-items: center; gap: var(--s3); margin-bottom: var(--s4); }
+.slot-row .slots { margin: 0; }
+button.slot { color: inherit; cursor: pointer; padding: 0; font-family: var(--reading); font-size: 3rem; line-height: 1; }
+button.slot:disabled { cursor: default; }
+.slot.filled { box-shadow: 0 4px 0 var(--base); }
+.btn.spell-check { width: 72px; height: 72px; border-radius: 50%; background: var(--right); color: #fff; display: inline-flex; align-items: center; justify-content: center; flex: none; }
+
+/* Places */
+.top-right { display: flex; gap: var(--s2); align-items: center; }
+.btn.places-btn { width: 48px; height: 48px; border-radius: 50%; background: var(--paper); color: var(--ink); box-shadow: 0 3px 0 var(--base); display: inline-flex; align-items: center; justify-content: center; }
+.places { align-items: center; gap: var(--s4); padding-top: var(--s6); }
+.place-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 1fr; gap: var(--s6) var(--s3); width: 100%; }
+.btn.place-btn { display: flex; flex-direction: column; padding: 0; overflow: hidden; background: var(--paper); border-radius: var(--r-tile); box-shadow: 0 4px 0 var(--base); }
+.btn.place-btn.here { outline: 4px solid var(--ink); }
+.place-art { position: relative; width: 100%; aspect-ratio: 4 / 3; overflow: hidden; }
+.place-art svg { position: absolute; left: 0; bottom: 0; width: 100%; height: 160%; }
+.place-name { font: 600 1.15rem/1.2 var(--display); padding: var(--s3) var(--s4); text-align: left; flex: 1; display: flex; align-items: center; }
+@media (min-width: 768px) and (min-height: 700px) { .place-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } .btn.places-btn { width: 64px; height: 64px; } }
+/* Round icon buttons: no side padding, so the icon keeps its full size. */
+.btn.places-btn, .btn.tool, .btn.spell-check { padding: 0; min-height: 0; }
+.btn.places-btn svg, .btn.tool svg, .btn.spell-check svg { flex: none; }
+
+/* Arabic (Noorani Qaida) */
+@font-face { font-family: "Noto Naskh Arabic"; src: url("NotoNaskhArabic.ttf") format("truetype"); font-weight: 400 700; font-display: swap; }
+.choice.arabic { font: 400 3.4rem/1.4 "Noto Naskh Arabic", serif; direction: rtl; }
+@media (min-width: 768px) and (min-height: 700px) { .choice.arabic { font-size: 4.6rem; } }

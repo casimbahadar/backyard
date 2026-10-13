@@ -42,6 +42,11 @@ const SCREENS = [
   { name: 'quest-money', seed: store(profile({ chosenNode: 'on-1-math/F1.1', grade: '1' })), drive: async p => { await p.click('#play'); await p.waitForSelector('[data-screen="quest"]'); } },
   { name: 'quest-fix', seed: store(profile({ chosenNode: 'on-1-language/B3.3', grade: '1', taughtCount: 37 })), drive: async p => { await p.click('#play'); await p.waitForSelector('[data-screen="quest"]'); } },
   { name: 'quest-sight', seed: store(profile({ chosenNode: 'on-1-language/B2.8', grade: '1', taughtCount: 37 })), drive: async p => { await p.click('#play'); await p.waitForSelector('[data-screen="quest"]'); await p.click('[data-choice="' + (await p.evaluate(() => window.__by.answerIndex)) + '"]'); await p.waitForFunction(() => document.querySelectorAll('.pip.done').length === 1); } },
+  { name: 'places', seed: store(profile({})), drive: async p => { await p.click('#places'); await p.waitForSelector('[data-screen="places"]'); } },
+  { name: 'yard-beach', seed: store(profile({ scene: 'beach', stickers: [{ id: 'starfish', x: 30, y: 80, scene: 'beach' }, { id: 'sandcastle', x: 60, y: 82, scene: 'beach', size: 1.4 }] })), drive: async () => {} },
+  { name: 'places', seed: store(profile({})), drive: async p => { await p.click('#places'); await p.waitForSelector('[data-screen="places"]'); } },
+  { name: 'yard-space', seed: store(profile({ scene: 'space', stickers: [{ id: 'rocket', x: 30, y: 70, scene: 'space' }, { id: 'astronaut', x: 65, y: 60, scene: 'space', size: 1.4 }] })), drive: async () => {} },
+  { name: 'quest-arabic', seed: store(profile({ noorani: true, chosenNode: 'noorani/Q4' })), drive: async p => { await p.click('#play'); await p.waitForSelector('[data-screen="quest"]'); } },
   { name: 'pick', seed: store(profile({ chosenNode: 'on-k-math/A9.1' })), drive: async p => {
     await p.click('#play');
     for (let i = 0; i < 8; i++) {

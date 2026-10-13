@@ -66,6 +66,36 @@ try {
   const dm = today(gm, new Date(2026, 9, 1));
   dm.quests = 9; dm.seconds = 14 * 60 + 59; check(!goalMet(gm, dm), 'a minutes goal ignores how many quests');
   dm.seconds = 15 * 60; check(goalMet(gm, dm) && goalProgress(gm, dm).unit === 'minutes', '15 minutes meets a 15-minute goal');
+  // Hand-picked sounds: questions use only those sounds, and growth adds the next unpicked ones.
+  const { childContext } = await import('./packs.js');
+  const { generate } = await import('./engine.js');
+  const kpack = packs['on-k-language'];
+  const pickedCtx = childContext(kpack, packs, { taughtSounds: [0, 1, 2, 3, 4, 7], readWords: [] });
+  const allowed = new Set(pickedCtx.taughtOrder.map(g => g.grapheme));
+  check(pickedCtx.taughtCount === 6 && [...allowed].join() === [0, 1, 2, 3, 4, 7].map(i => kpack.taughtSet.order[i].grapheme).join(), 'picked sounds did not become the taught set');
+  const readSkill = kpack.expectations.find(e => e.code === 'A2.5').skills[0];
+  const items = generate(readSkill, 'W-PICK', 40, pickedCtx);
+  check(items.length === 40 && items.every(it => [...it.answer].every(ch => allowed.has(ch))), 'a word used a sound that was not picked');
+  const gp = newProfile({ name: 'P', grade: 'k', startCount: 4 });
+  gp.taughtSounds = [0, 1, 2, 3, 9]; gp.taughtCount = 5;
+  gp.attempts[GROW_NODE] = [{ right: 8, total: 8, taught: 5 }, { right: 8, total: 8, taught: 5 }];
+  check(growTaught(gp, GROW_NODE, 37) && JSON.stringify(gp.taughtSounds) === '[0,1,2,3,4,5,6,7,9]', 'growth did not add the next four unpicked sounds');
+  // Stickers need 70%: 6 of 8 in a quest, 7 of 10 on a sheet.
+  const { earnsSticker: es, neededFor: nf } = await import('./rules.js');
+  check(nf(8) === 6 && nf(10) === 7 && nf(6) === 5, 'the sticker threshold is not 70% rounded up');
+  check(!es(5, 8) && es(6, 8) && !es(6, 10) && es(7, 10), 'earnsSticker does not follow the 70% rule');
+  // Stickers: 259 in all, none repeated, every one drawable; the picker offers two that
+  // suit the place and three different ones.
+  const { STICKERS, offerThree, stickerSvg } = await import('./stickers.js');
+  check(STICKERS.length === 259 && new Set(STICKERS.map(s => s.id)).size === 259, `expected 259 different stickers, found ${STICKERS.length}`);
+  check(STICKERS.every(s => (stickerSvg(s.id) ?? '').includes('<path') || stickerSvg(s.id).includes('<circle') || stickerSvg(s.id).includes('<rect')), 'a sticker has no drawing');
+  for (const place of ['yard', 'beach', 'sea', 'farm', 'snow', 'space', 'camp', 'park']) {
+    for (let k = 0; k < 20; k++) {
+      const o = offerThree(n => Uint32Array.from({ length: n }, (_, i) => (k * 7919 + i * 104729) >>> 0), place);
+      const by = id => STICKERS.find(s => s.id === id);
+      check(new Set(o).size === 3 && by(o[0]).places.includes(place) && by(o[1]).places.includes(place), `${place}: offer ${o.join(', ')} does not start with two stickers for this place`);
+    }
+  }
   console.log(`checks passed: ${passed}, failed: ${failures.length}`);
   for (const f of failures) console.log(`FAIL ${f}`);
   process.exit(failures.length ? 1 : 0);

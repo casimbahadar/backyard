@@ -9,6 +9,8 @@ import { hashString } from './prng.js';
 import { WORDS, BY_WORD, FIRST_SOUNDS, lookAlike, shapeOf, wordsOfShapes } from './words.js';
 import { contexts, SEEDS_NO_CTX, SEEDS_PER_CTX, PER_SET } from './test-cases.js';
 import { PICTURE_WORDS } from './pictures.js';
+import { speechPieces, spokenAnswer } from './voice.js';
+const VOICE = new Set(JSON.parse(readFileSync(new URL('./voice-pieces.json', import.meta.url))).pieces.map(p => p.key));
 const DRAWN = new Set(PICTURE_WORDS);
 
 const root = dirname(fileURLToPath(import.meta.url));
@@ -78,6 +80,7 @@ function expected(item) {
       const [x, y] = Object.keys(f.sizes);
       return (f.sizes[x] > f.sizes[y]) === bigger ? x : y;
     }
+    case 'arabic': return f.target;
     case 'money': {
       if (f.mode === 'find') return f.target;
       const [x, y] = Object.keys(f.values);
@@ -174,7 +177,7 @@ let allHash = 0;
 try {
   rmSync(join(root, 'test-output', 'samples'), { recursive: true, force: true });
   mkdirSync(join(root, 'test-output', 'samples'), { recursive: true });
-  const packs = readdirSync(root).filter(f => /^on-.*\.json$/.test(f)).sort();
+  const packs = readdirSync(root).filter(f => /^(on-.*|noorani)\.json$/.test(f)).sort();
   const byName = Object.fromEntries(packs.map(f => [f.replace(/\.json$/, ''), JSON.parse(readFileSync(join(root, f), 'utf8'))]));
   for (const file of packs) {
     const pack = byName[file.replace(/\.json$/, '')];
@@ -223,6 +226,8 @@ try {
               const exp2 = expected(it);
               if (exp2 !== undefined) check(same(exp2, it.answer), `${w}: answer ${it.answer} but facts give ${exp2}`);
               if (it.template === 'number-facts' && it.facts.numbers.slice(0, 2).includes(0)) zeroFacts++;
+              // Every spoken line must be on the voice recording list (node make-voice-list.mjs).
+              if (i === 0) for (const line of [it.prompt.speech, spokenAnswer(it)]) for (const p of speechPieces(line)) check(VOICE.has(p.key), `${w}: "${p.say}" is not on the voice recording list; run make-voice-list.mjs`);
               if (it.template === 'belongs') {
                 const ok = RULES[it.facts.rule];
                 check(it.facts.group.every(ok), `${w}: a group member breaks the rule ${it.facts.rule}`);

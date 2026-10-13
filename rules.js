@@ -1,6 +1,12 @@
 // Game rules as plain functions, so tests can check them without a browser.
 
 // Stars by share right: 3 at 7 of 8 or better, 2 at 5 of 8 or better, else 1.
+// A sticker needs at least 70% right (6 of an 8-question quest, 7 of a 10-question
+// sheet), so quick tapping through a quest does not pay.
+export const STICKER_SHARE = 0.7;
+export const neededFor = total => Math.ceil(total * STICKER_SHARE - 1e-9);
+export const earnsSticker = (right, total) => right >= neededFor(total);
+
 export function starsFor(right, total) {
   const share = right / total;
   if (share >= 7 / 8) return 3;
@@ -36,7 +42,13 @@ export function masteredFor(profile, key) {
 export function growTaught(profile, key, maxSounds) {
   if (key !== GROW_NODE || profile.taughtLocked || profile.taughtCount >= maxSounds) return false;
   if (!masteredFor(profile, key)) return false;
-  profile.taughtCount = Math.min(maxSounds, profile.taughtCount + GROW_STEP);
+  if (Array.isArray(profile.taughtSounds)) {
+    // Sounds picked one by one: add the next four not yet picked, in teaching order.
+    const next = [];
+    for (let i = 0; i < maxSounds && next.length < GROW_STEP; i++) if (!profile.taughtSounds.includes(i)) next.push(i);
+    profile.taughtSounds = [...profile.taughtSounds, ...next].sort((a, b) => a - b);
+    profile.taughtCount = profile.taughtSounds.length;
+  } else profile.taughtCount = Math.min(maxSounds, profile.taughtCount + GROW_STEP);
   return true;
 }
 
@@ -75,6 +87,10 @@ export function packsForGrade(grade) {
   return grade === '1' ? ['on-1-language', 'on-1-math', 'on-k-language', 'on-k-math'] : ['on-k-language', 'on-k-math'];
 }
 
+// A child's packs: their grade's, plus the optional Noorani Qaida lessons when a parent
+// has switched them on for that child.
+export const packsFor = profile => [...packsForGrade(profile.grade), ...(profile.noorani ? ['noorani'] : [])];
+
 function unlocked(profile, packs, packName, exp) {
   const key = nodeKey(packName, exp.code);
   if (profile.unlocked.includes(key)) return true;
@@ -96,7 +112,7 @@ export function pickNode(profile, packs, playable) {
     if (exp && playable(packs[p], exp)) return { packName: p, exp };
   }
   const candidates = [];
-  for (const packName of packsForGrade(profile.grade)) {
+  for (const packName of packsFor(profile)) {
     const pack = packs[packName];
     for (const exp of pack.expectations) {
       if (!playable(pack, exp)) continue;

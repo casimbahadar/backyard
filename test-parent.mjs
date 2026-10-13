@@ -68,8 +68,11 @@ try {
 
   // Kids: set every sound, lock it, change the daily goal, add a second child, then delete them.
   await page.screenshot({ path: join(out, 'parent-kids-390.png'), fullPage: true });
-  await page.fill('#kid-taught', '32');
-  check(await page.$$eval('.sound.on', e => e.length) === 32, 'the sound list does not show 32 taught sounds');
+  await page.click('#sounds-k');
+  check(await page.$$eval('.sound.on', e => e.length) === 32, 'All kindergarten did not choose 32 sounds');
+  await page.click('[data-sound="5"]');
+  check(await page.$eval('[data-sound="5"]', e => e.getAttribute('aria-pressed')) === 'false', 'tapping a chosen sound did not unchoose it');
+  await page.click('[data-sound="5"]');
   await page.check('#kid-lock');
   await page.selectOption('#kid-goal', 'm15');
   await page.click('#kid-save');
@@ -89,6 +92,21 @@ try {
   await page.waitForSelector('#kid-name');
   s = await state(page);
   check(s.profiles.length === 1 && s.profiles[0].name === 'Ava', 'the second tap did not delete only the new child');
+  check(JSON.stringify(s.profiles[0].taughtSounds) === JSON.stringify([...Array(32).keys()]), 'the chosen sounds were not saved');
+  // Picking sounds one by one: only those sounds are used for reading.
+  await page.click('#sounds-first4');
+  for (const i of [9, 12]) await page.click(`[data-sound="${i}"]`);
+  await page.click('#kid-save');
+  check(JSON.stringify((await state(page)).profiles[0].taughtSounds) === '[0,1,2,3,9,12]', 'a hand-picked set of sounds was not saved');
+  await page.click('#sounds-first4');
+  await page.click('[data-sound="0"]');
+  await page.click('#kid-save');
+  check((await page.textContent('.status')).includes('at least 4'), 'fewer than 4 sounds was not refused');
+  await page.click('#sounds-k');
+  await page.click('#kid-save');
+  await page.check('#kid-noorani');
+  await page.click('#kid-save');
+  check((await state(page)).profiles[0].noorani === true, 'the Noorani Qaida switch was not saved');
 
   // Print and mark a sheet for Ava; the reward reaches her yard.
   await page.click('[data-tab="print"]');
@@ -147,7 +165,7 @@ try {
   const v1 = join(out, 'old-backup.json');
   await writeFile(v1, JSON.stringify({ version: 1, sheets: { 'W-2345': { id: 'W-2345' } }, results: {} }));
   await page.setInputFiles('#import', v1);
-  await page.waitForFunction(() => /Backup loaded|not a Backyard/.test(document.getElementById('settings-status').textContent));
+  await page.waitForFunction(() => /Backup loaded|not a Sticker Yard/.test(document.getElementById('settings-status').textContent));
   s = await state(page);
   check(s.version === 3 && s.sheets['W-2345'] && s.settings.pin === '4321', 'an old backup did not load, or loading it lost the PIN');
   await page.setInputFiles('#import', file);
@@ -156,7 +174,7 @@ try {
   const bad = join(out, 'bad.json');
   await writeFile(bad, '{"hello": 1');
   await page.setInputFiles('#import', bad);
-  await page.waitForFunction(() => /not a Backyard backup/.test(document.getElementById('settings-status').textContent));
+  await page.waitForFunction(() => /not a Sticker Yard backup/.test(document.getElementById('settings-status').textContent));
   check((await state(page)).profiles.length === 1, 'a broken file changed the saved data');
   await page.click('#clear');
   check((await state(page)).profiles.length === 1, 'one tap cleared all data');
@@ -164,6 +182,17 @@ try {
   await page.waitForSelector('#pin');
   s = await state(page);
   check(s.profiles.length === 0 && s.settings.pin === null, 'clearing did not remove everything');
+
+  // Back to the yard: leaves the parent area and asks for the PIN next time.
+  const back = await ctx.newPage();
+  await back.goto(`${base}/parent.html`);
+  await back.waitForFunction(() => window.__parentReady);
+  await back.fill('#pin', '4321'); await back.fill('#pin-again', '4321'); await back.click('#pin-go');
+  await back.waitForSelector('#to-yard');
+  await back.click('#to-yard');
+  await back.waitForURL(/index\.html/);
+  check(await back.evaluate(() => sessionStorage.getItem('backyard-parent')) === null, 'leaving the parent area did not lock it again');
+  await back.close();
 
   check(errors.length === 0, `page errors: ${errors.join('; ')}`);
   console.log(`checks passed: ${passed}, failed: ${failures.length}`);

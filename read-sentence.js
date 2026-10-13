@@ -21,7 +21,7 @@ export function canUse(word, ctx) {
 // the taught set and the word shapes, so each answer is kept and reused.
 const sceneCache = new Map();
 export function sceneOptions(ctx, shapes) {
-  const key = `${ctx.taughtCount}|${ctx.taughtOrder.length}|${(ctx.taughtWords ?? []).join(',')}|${shapes ?? ''}`;
+  const key = `${ctx.taughtOrder.slice(0, ctx.taughtCount).map(g => g.grapheme + g.phoneme).join(',')}|${(ctx.taughtWords ?? []).join(',')}|${shapes ?? ''}`;
   if (!sceneCache.has(key)) sceneCache.set(key, computeScenes(ctx, shapes));
   return sceneCache.get(key);
 }

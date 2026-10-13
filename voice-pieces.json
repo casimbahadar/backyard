@@ -1,0 +1,1511 @@
+{
+ "made": "2026-10-13",
+ "lines": 1863,
+ "pieces": [
+  {
+   "key": "p:beach",
+   "say": "Beach",
+   "example": "Beach"
+  },
+  {
+   "key": "p:campsite",
+   "say": "Campsite",
+   "example": "Campsite"
+  },
+  {
+   "key": "p:can you spell",
+   "say": "Can you spell",
+   "example": "Can you spell map?"
+  },
+  {
+   "key": "p:city park",
+   "say": "City park",
+   "example": "City park"
+  },
+  {
+   "key": "p:count by fives.",
+   "say": "Count by fives.",
+   "example": "Count by fives. Ten, fifteen, twenty. What number comes next?"
+  },
+  {
+   "key": "p:count by tens.",
+   "say": "Count by tens.",
+   "example": "Count by tens. Ten, twenty, thirty. What number comes next?"
+  },
+  {
+   "key": "p:count by twos.",
+   "say": "Count by twos.",
+   "example": "Count by twos. Ten, twelve, fourteen. What number comes next?"
+  },
+  {
+   "key": "p:count the tens and the ones.",
+   "say": "Count the tens and the ones.",
+   "example": "Count the tens and the ones. How many in all?"
+  },
+  {
+   "key": "p:farm",
+   "say": "Farm",
+   "example": "Farm"
+  },
+  {
+   "key": "p:find the letter",
+   "say": "Find the letter",
+   "example": "Find the letter a."
+  },
+  {
+   "key": "p:get",
+   "say": "Get",
+   "example": "One star! Get six right to earn a sticker. Try again!"
+  },
+  {
+   "key": "p:great practice!",
+   "say": "Great practice!",
+   "example": "One star! That's all the stickers for today. Great practice!"
+  },
+  {
+   "key": "p:here is the right one.",
+   "say": "Here is the right one.",
+   "example": "Here is the right one."
+  },
+  {
+   "key": "p:how many",
+   "say": "How many",
+   "example": "How many apples?"
+  },
+  {
+   "key": "p:how many in all?",
+   "say": "How many in all?",
+   "example": "Count the tens and the ones. How many in all?"
+  },
+  {
+   "key": "p:it is",
+   "say": "It is",
+   "example": "It is a."
+  },
+  {
+   "key": "p:it is spelled",
+   "say": "It is spelled",
+   "example": "It is spelled m, a, p."
+  },
+  {
+   "key": "p:it is the",
+   "say": "It is the",
+   "example": "It is the bed."
+  },
+  {
+   "key": "p:it is the bottom ribbon.",
+   "say": "It is the bottom ribbon.",
+   "example": "It is the bottom ribbon."
+  },
+  {
+   "key": "p:it is the fifty-dollar bill.",
+   "say": "It is the fifty-dollar bill.",
+   "example": "It is the fifty-dollar bill."
+  },
+  {
+   "key": "p:it is the five-dollar bill.",
+   "say": "It is the five-dollar bill.",
+   "example": "It is the five-dollar bill."
+  },
+  {
+   "key": "p:it is the ten-dollar bill.",
+   "say": "It is the ten-dollar bill.",
+   "example": "It is the ten-dollar bill."
+  },
+  {
+   "key": "p:it is the top ribbon.",
+   "say": "It is the top ribbon.",
+   "example": "It is the top ribbon."
+  },
+  {
+   "key": "p:it is the twenty-dollar bill.",
+   "say": "It is the twenty-dollar bill.",
+   "example": "It is the twenty-dollar bill."
+  },
+  {
+   "key": "p:listen.",
+   "say": "Listen.",
+   "example": "Listen. Put the sounds together. Which one is it?"
+  },
+  {
+   "key": "p:move it, make it bigger or smaller, or tap the tick when you are done.",
+   "say": "Move it, make it bigger or smaller, or tap the tick when you are done.",
+   "example": "Move it, make it bigger or smaller, or tap the tick when you are done."
+  },
+  {
+   "key": "p:or",
+   "say": "or",
+   "example": "Which number is smaller, nineteen or twelve?"
+  },
+  {
+   "key": "p:outer space",
+   "say": "Outer space",
+   "example": "Outer space"
+  },
+  {
+   "key": "p:pick a sticker.",
+   "say": "Pick a sticker.",
+   "example": "Your worksheet got stars! Pick a sticker."
+  },
+  {
+   "key": "p:plus",
+   "say": "plus",
+   "example": "What is three plus two?"
+  },
+  {
+   "key": "p:put it in your yard.",
+   "say": "Put it in your yard.",
+   "example": "Put it in your yard."
+  },
+  {
+   "key": "p:put the sounds together.",
+   "say": "Put the sounds together.",
+   "example": "Listen. Put the sounds together. Which one is it?"
+  },
+  {
+   "key": "p:read it.",
+   "say": "Read it.",
+   "example": "Read it. Tap the picture that matches."
+  },
+  {
+   "key": "p:read the word.",
+   "say": "Read the word.",
+   "example": "Read the word. Tap its picture."
+  },
+  {
+   "key": "p:right to earn a sticker.",
+   "say": "right to earn a sticker.",
+   "example": "One star! Get six right to earn a sticker. Try again!"
+  },
+  {
+   "key": "p:snowy woods",
+   "say": "Snowy woods",
+   "example": "Snowy woods"
+  },
+  {
+   "key": "p:start with?",
+   "say": "start with?",
+   "example": "Apple. What does apple start with?"
+  },
+  {
+   "key": "p:take away",
+   "say": "take away",
+   "example": "What is four take away one?"
+  },
+  {
+   "key": "p:tap its picture.",
+   "say": "Tap its picture.",
+   "example": "Read the word. Tap its picture."
+  },
+  {
+   "key": "p:tap the",
+   "say": "Tap the",
+   "example": "Tap the rectangle."
+  },
+  {
+   "key": "p:tap the fifty-dollar bill.",
+   "say": "Tap the fifty-dollar bill.",
+   "example": "Tap the fifty-dollar bill."
+  },
+  {
+   "key": "p:tap the five-dollar bill.",
+   "say": "Tap the five-dollar bill.",
+   "example": "Tap the five-dollar bill."
+  },
+  {
+   "key": "p:tap the letter you hear.",
+   "say": "Tap the letter you hear.",
+   "example": "Tap the letter you hear."
+  },
+  {
+   "key": "p:tap the letters you hear.",
+   "say": "Tap the letters you hear.",
+   "example": "Tap the letters you hear."
+  },
+  {
+   "key": "p:tap the picture that matches.",
+   "say": "Tap the picture that matches.",
+   "example": "Read it. Tap the picture that matches."
+  },
+  {
+   "key": "p:tap the sound you hear.",
+   "say": "Tap the sound you hear.",
+   "example": "Tap the sound you hear."
+  },
+  {
+   "key": "p:tap the ten-dollar bill.",
+   "say": "Tap the ten-dollar bill.",
+   "example": "Tap the ten-dollar bill."
+  },
+  {
+   "key": "p:tap the tick when you are done.",
+   "say": "Tap the tick when you are done.",
+   "example": "Tap the tick when you are done."
+  },
+  {
+   "key": "p:tap the twenty-dollar bill.",
+   "say": "Tap the twenty-dollar bill.",
+   "example": "Tap the twenty-dollar bill."
+  },
+  {
+   "key": "p:tap the word:",
+   "say": "Tap the word:",
+   "example": "Tap the word: said."
+  },
+  {
+   "key": "p:that's all the stickers for today.",
+   "say": "That's all the stickers for today.",
+   "example": "One star! That's all the stickers for today. Great practice!"
+  },
+  {
+   "key": "p:the word is:",
+   "say": "The word is:",
+   "example": "The word is: said."
+  },
+  {
+   "key": "p:trace the letter",
+   "say": "Trace the letter",
+   "example": "Trace the letter s."
+  },
+  {
+   "key": "p:try again!",
+   "say": "Try again!",
+   "example": "One star! Get six right to earn a sticker. Try again!"
+  },
+  {
+   "key": "p:under the sea",
+   "say": "Under the sea",
+   "example": "Under the sea"
+  },
+  {
+   "key": "p:what comes first?",
+   "say": "What comes first?",
+   "example": "What comes first?"
+  },
+  {
+   "key": "p:what comes next?",
+   "say": "What comes next?",
+   "example": "What comes next?"
+  },
+  {
+   "key": "p:what does",
+   "say": "What does",
+   "example": "Apple. What does apple start with?"
+  },
+  {
+   "key": "p:what is",
+   "say": "What is",
+   "example": "What is four take away one?"
+  },
+  {
+   "key": "p:what is missing?",
+   "say": "What is missing?",
+   "example": "What is missing?"
+  },
+  {
+   "key": "p:what number comes next?",
+   "say": "What number comes next?",
+   "example": "Zero, one, two. What number comes next?"
+  },
+  {
+   "key": "p:where do you want to play?",
+   "say": "Where do you want to play?",
+   "example": "Where do you want to play?"
+  },
+  {
+   "key": "p:which group has less?",
+   "say": "Which group has less?",
+   "example": "Which group has less?"
+  },
+  {
+   "key": "p:which group has more?",
+   "say": "Which group has more?",
+   "example": "Which group has more?"
+  },
+  {
+   "key": "p:which number is bigger,",
+   "say": "Which number is bigger,",
+   "example": "Which number is bigger, twelve or zero?"
+  },
+  {
+   "key": "p:which number is smaller,",
+   "say": "Which number is smaller,",
+   "example": "Which number is smaller, nineteen or twelve?"
+  },
+  {
+   "key": "p:which one belongs with these?",
+   "say": "Which one belongs with these?",
+   "example": "Which one belongs with these?"
+  },
+  {
+   "key": "p:which one holds less?",
+   "say": "Which one holds less?",
+   "example": "Which one holds less?"
+  },
+  {
+   "key": "p:which one holds more?",
+   "say": "Which one holds more?",
+   "example": "Which one holds more?"
+  },
+  {
+   "key": "p:which one is heavier?",
+   "say": "Which one is heavier?",
+   "example": "Which one is heavier?"
+  },
+  {
+   "key": "p:which one is it?",
+   "say": "Which one is it?",
+   "example": "Listen. Put the sounds together. Which one is it?"
+  },
+  {
+   "key": "p:which one is lighter?",
+   "say": "Which one is lighter?",
+   "example": "Which one is lighter?"
+  },
+  {
+   "key": "p:which one is worth more?",
+   "say": "Which one is worth more?",
+   "example": "Which one is worth more?"
+  },
+  {
+   "key": "p:which one is written the right way?",
+   "say": "Which one is written the right way?",
+   "example": "Which one is written the right way?"
+  },
+  {
+   "key": "p:which ribbon is longer?",
+   "say": "Which ribbon is longer?",
+   "example": "Which ribbon is longer?"
+  },
+  {
+   "key": "p:which ribbon is shorter?",
+   "say": "Which ribbon is shorter?",
+   "example": "Which ribbon is shorter?"
+  },
+  {
+   "key": "p:yard",
+   "say": "Yard",
+   "example": "Yard"
+  },
+  {
+   "key": "p:you did your quests today!",
+   "say": "You did your quests today!",
+   "example": "You did your quests today!"
+  },
+  {
+   "key": "p:your worksheet got",
+   "say": "Your worksheet got",
+   "example": "Your worksheet got stars! Pick a sticker."
+  },
+  {
+   "key": "w:a",
+   "say": "a",
+   "example": "Tap the word: a."
+  },
+  {
+   "key": "w:and",
+   "say": "and",
+   "example": "Tap the word: and."
+  },
+  {
+   "key": "w:apple",
+   "say": "apple",
+   "example": "Apple. What does apple start with?"
+  },
+  {
+   "key": "w:apples",
+   "say": "apples",
+   "example": "How many apples?"
+  },
+  {
+   "key": "w:are",
+   "say": "are",
+   "example": "Tap the word: are."
+  },
+  {
+   "key": "w:bag",
+   "say": "bag",
+   "example": "It is bag."
+  },
+  {
+   "key": "w:bed",
+   "say": "bed",
+   "example": "It is bed."
+  },
+  {
+   "key": "w:bees",
+   "say": "bees",
+   "example": "How many bees?"
+  },
+  {
+   "key": "w:belt",
+   "say": "belt",
+   "example": "It is belt."
+  },
+  {
+   "key": "w:bib",
+   "say": "bib",
+   "example": "It is bib."
+  },
+  {
+   "key": "w:bike",
+   "say": "bike",
+   "example": "Bike. What does bike start with?"
+  },
+  {
+   "key": "w:birds",
+   "say": "birds",
+   "example": "How many birds?"
+  },
+  {
+   "key": "w:bone",
+   "say": "bone",
+   "example": "Bone. What does bone start with?"
+  },
+  {
+   "key": "w:box",
+   "say": "box",
+   "example": "It is box."
+  },
+  {
+   "key": "w:bug",
+   "say": "bug",
+   "example": "It is bug."
+  },
+  {
+   "key": "w:bus",
+   "say": "bus",
+   "example": "It is bus."
+  },
+  {
+   "key": "w:cake",
+   "say": "cake",
+   "example": "Cake. What does cake start with?"
+  },
+  {
+   "key": "w:can",
+   "say": "can",
+   "example": "It is can."
+  },
+  {
+   "key": "w:cat",
+   "say": "cat",
+   "example": "It is cat."
+  },
+  {
+   "key": "w:chick",
+   "say": "chick",
+   "example": "It is chick."
+  },
+  {
+   "key": "w:circle",
+   "say": "circle",
+   "example": "Tap the circle."
+  },
+  {
+   "key": "w:clam",
+   "say": "clam",
+   "example": "It is clam."
+  },
+  {
+   "key": "w:come",
+   "say": "come",
+   "example": "Tap the word: come."
+  },
+  {
+   "key": "w:cone",
+   "say": "cone",
+   "example": "It is cone."
+  },
+  {
+   "key": "w:crab",
+   "say": "crab",
+   "example": "It is crab."
+  },
+  {
+   "key": "w:crib",
+   "say": "crib",
+   "example": "It is crib."
+  },
+  {
+   "key": "w:cube",
+   "say": "cube",
+   "example": "Cube. What does cube start with?"
+  },
+  {
+   "key": "w:cup",
+   "say": "cup",
+   "example": "It is cup."
+  },
+  {
+   "key": "w:cylinder",
+   "say": "cylinder",
+   "example": "It is cylinder."
+  },
+  {
+   "key": "w:desk",
+   "say": "desk",
+   "example": "It is desk."
+  },
+  {
+   "key": "w:dime",
+   "say": "dime",
+   "example": "It is the dime."
+  },
+  {
+   "key": "w:do",
+   "say": "do",
+   "example": "Tap the word: do."
+  },
+  {
+   "key": "w:dog",
+   "say": "dog",
+   "example": "It is dog."
+  },
+  {
+   "key": "w:drum",
+   "say": "drum",
+   "example": "It is drum."
+  },
+  {
+   "key": "w:duck",
+   "say": "duck",
+   "example": "It is duck."
+  },
+  {
+   "key": "w:egg",
+   "say": "egg",
+   "example": "Egg. What does egg start with?"
+  },
+  {
+   "key": "w:fan",
+   "say": "fan",
+   "example": "It is fan."
+  },
+  {
+   "key": "w:fish",
+   "say": "fish",
+   "example": "It is fish."
+  },
+  {
+   "key": "w:flag",
+   "say": "flag",
+   "example": "It is flag."
+  },
+  {
+   "key": "w:flowers",
+   "say": "flowers",
+   "example": "How many flowers?"
+  },
+  {
+   "key": "w:fox",
+   "say": "fox",
+   "example": "It is fox."
+  },
+  {
+   "key": "w:frog",
+   "say": "frog",
+   "example": "It is frog."
+  },
+  {
+   "key": "w:gate",
+   "say": "gate",
+   "example": "Gate. What does gate start with?"
+  },
+  {
+   "key": "w:gift",
+   "say": "gift",
+   "example": "It is gift."
+  },
+  {
+   "key": "w:go",
+   "say": "go",
+   "example": "Tap the word: go."
+  },
+  {
+   "key": "w:gum",
+   "say": "gum",
+   "example": "It is gum."
+  },
+  {
+   "key": "w:hand",
+   "say": "hand",
+   "example": "It is hand."
+  },
+  {
+   "key": "w:hat",
+   "say": "hat",
+   "example": "It is hat."
+  },
+  {
+   "key": "w:have",
+   "say": "have",
+   "example": "Tap the word: have."
+  },
+  {
+   "key": "w:he",
+   "say": "he",
+   "example": "Tap the word: he."
+  },
+  {
+   "key": "w:hen",
+   "say": "hen",
+   "example": "It is hen."
+  },
+  {
+   "key": "w:here",
+   "say": "here",
+   "example": "Tap the word: here."
+  },
+  {
+   "key": "w:hexagon",
+   "say": "hexagon",
+   "example": "Tap the hexagon."
+  },
+  {
+   "key": "w:hive",
+   "say": "hive",
+   "example": "Hive. What does hive start with?"
+  },
+  {
+   "key": "w:i",
+   "say": "i",
+   "example": "Tap the word: I."
+  },
+  {
+   "key": "w:igloo",
+   "say": "igloo",
+   "example": "Igloo. What does igloo start with?"
+  },
+  {
+   "key": "w:is",
+   "say": "is",
+   "example": "Tap the word: is."
+  },
+  {
+   "key": "w:jam",
+   "say": "jam",
+   "example": "It is jam."
+  },
+  {
+   "key": "w:jet",
+   "say": "jet",
+   "example": "It is jet."
+  },
+  {
+   "key": "w:jug",
+   "say": "jug",
+   "example": "It is jug."
+  },
+  {
+   "key": "w:kite",
+   "say": "kite",
+   "example": "Kite. What does kite start with?"
+  },
+  {
+   "key": "w:lamp",
+   "say": "lamp",
+   "example": "It is lamp."
+  },
+  {
+   "key": "w:leaves",
+   "say": "leaves",
+   "example": "How many leaves?"
+  },
+  {
+   "key": "w:leg",
+   "say": "leg",
+   "example": "It is leg."
+  },
+  {
+   "key": "w:lid",
+   "say": "lid",
+   "example": "It is lid."
+  },
+  {
+   "key": "w:like",
+   "say": "like",
+   "example": "Tap the word: like."
+  },
+  {
+   "key": "w:log",
+   "say": "log",
+   "example": "It is log."
+  },
+  {
+   "key": "w:look",
+   "say": "look",
+   "example": "Tap the word: look."
+  },
+  {
+   "key": "w:loonie",
+   "say": "loonie",
+   "example": "Tap the loonie."
+  },
+  {
+   "key": "w:map",
+   "say": "map",
+   "example": "It is map."
+  },
+  {
+   "key": "w:mask",
+   "say": "mask",
+   "example": "It is mask."
+  },
+  {
+   "key": "w:me",
+   "say": "me",
+   "example": "Tap the word: me."
+  },
+  {
+   "key": "w:milk",
+   "say": "milk",
+   "example": "It is milk."
+  },
+  {
+   "key": "w:mop",
+   "say": "mop",
+   "example": "It is mop."
+  },
+  {
+   "key": "w:my",
+   "say": "my",
+   "example": "Tap the word: my."
+  },
+  {
+   "key": "w:nest",
+   "say": "nest",
+   "example": "It is nest."
+  },
+  {
+   "key": "w:net",
+   "say": "net",
+   "example": "It is net."
+  },
+  {
+   "key": "w:nickel",
+   "say": "nickel",
+   "example": "Tap the nickel."
+  },
+  {
+   "key": "w:no",
+   "say": "no",
+   "example": "Tap the word: no."
+  },
+  {
+   "key": "w:nose",
+   "say": "nose",
+   "example": "Nose. What does nose start with?"
+  },
+  {
+   "key": "w:nut",
+   "say": "nut",
+   "example": "It is nut."
+  },
+  {
+   "key": "w:octopus",
+   "say": "octopus",
+   "example": "Octopus. What does octopus start with?"
+  },
+  {
+   "key": "w:of",
+   "say": "of",
+   "example": "Tap the word: of."
+  },
+  {
+   "key": "w:pan",
+   "say": "pan",
+   "example": "It is pan."
+  },
+  {
+   "key": "w:pen",
+   "say": "pen",
+   "example": "It is pen."
+  },
+  {
+   "key": "w:pig",
+   "say": "pig",
+   "example": "It is pig."
+  },
+  {
+   "key": "w:plate",
+   "say": "plate",
+   "example": "Plate. What does plate start with?"
+  },
+  {
+   "key": "w:plum",
+   "say": "plum",
+   "example": "It is plum."
+  },
+  {
+   "key": "w:pond",
+   "say": "pond",
+   "example": "It is pond."
+  },
+  {
+   "key": "w:pot",
+   "say": "pot",
+   "example": "It is pot."
+  },
+  {
+   "key": "w:prism",
+   "say": "prism",
+   "example": "It is prism."
+  },
+  {
+   "key": "w:pyramid",
+   "say": "pyramid",
+   "example": "It is pyramid."
+  },
+  {
+   "key": "w:quarter",
+   "say": "quarter",
+   "example": "It is the quarter."
+  },
+  {
+   "key": "w:queen",
+   "say": "queen",
+   "example": "Queen. What does queen start with?"
+  },
+  {
+   "key": "w:raft",
+   "say": "raft",
+   "example": "It is raft."
+  },
+  {
+   "key": "w:rake",
+   "say": "rake",
+   "example": "Rake. What does rake start with?"
+  },
+  {
+   "key": "w:rectangle",
+   "say": "rectangle",
+   "example": "Tap the rectangle."
+  },
+  {
+   "key": "w:rhombus",
+   "say": "rhombus",
+   "example": "Tap the rhombus."
+  },
+  {
+   "key": "w:rock",
+   "say": "rock",
+   "example": "It is rock."
+  },
+  {
+   "key": "w:rope",
+   "say": "rope",
+   "example": "Rope. What does rope start with?"
+  },
+  {
+   "key": "w:rose",
+   "say": "rose",
+   "example": "Rose. What does rose start with?"
+  },
+  {
+   "key": "w:rug",
+   "say": "rug",
+   "example": "It is rug."
+  },
+  {
+   "key": "w:said",
+   "say": "said",
+   "example": "Tap the word: said."
+  },
+  {
+   "key": "w:see",
+   "say": "see",
+   "example": "Tap the word: see."
+  },
+  {
+   "key": "w:she",
+   "say": "she",
+   "example": "Tap the word: she."
+  },
+  {
+   "key": "w:shed",
+   "say": "shed",
+   "example": "It is shed."
+  },
+  {
+   "key": "w:ship",
+   "say": "ship",
+   "example": "It is ship."
+  },
+  {
+   "key": "w:sled",
+   "say": "sled",
+   "example": "It is sled."
+  },
+  {
+   "key": "w:slide",
+   "say": "slide",
+   "example": "Slide. What does slide start with?"
+  },
+  {
+   "key": "w:slug",
+   "say": "slug",
+   "example": "It is slug."
+  },
+  {
+   "key": "w:snake",
+   "say": "snake",
+   "example": "Snake. What does snake start with?"
+  },
+  {
+   "key": "w:sock",
+   "say": "sock",
+   "example": "It is sock."
+  },
+  {
+   "key": "w:sphere",
+   "say": "sphere",
+   "example": "It is sphere."
+  },
+  {
+   "key": "w:square",
+   "say": "square",
+   "example": "Tap the square."
+  },
+  {
+   "key": "w:star",
+   "say": "star",
+   "example": "One star! Pick a sticker."
+  },
+  {
+   "key": "w:stars",
+   "say": "stars",
+   "example": "Your worksheet got stars! Pick a sticker."
+  },
+  {
+   "key": "w:stop",
+   "say": "stop",
+   "example": "It is stop."
+  },
+  {
+   "key": "w:sun",
+   "say": "sun",
+   "example": "It is sun."
+  },
+  {
+   "key": "w:tent",
+   "say": "tent",
+   "example": "It is tent."
+  },
+  {
+   "key": "w:the",
+   "say": "the",
+   "example": "Tap the word: the."
+  },
+  {
+   "key": "w:they",
+   "say": "they",
+   "example": "Tap the word: they."
+  },
+  {
+   "key": "w:thumb",
+   "say": "thumb",
+   "example": "Thumb. What does thumb start with?"
+  },
+  {
+   "key": "w:to",
+   "say": "to",
+   "example": "Tap the word: to."
+  },
+  {
+   "key": "w:toonie",
+   "say": "toonie",
+   "example": "Tap the toonie."
+  },
+  {
+   "key": "w:trapezoid",
+   "say": "trapezoid",
+   "example": "Tap the trapezoid."
+  },
+  {
+   "key": "w:triangle",
+   "say": "triangle",
+   "example": "Tap the triangle."
+  },
+  {
+   "key": "w:tub",
+   "say": "tub",
+   "example": "It is tub."
+  },
+  {
+   "key": "w:twig",
+   "say": "twig",
+   "example": "It is twig."
+  },
+  {
+   "key": "w:umbrella",
+   "say": "umbrella",
+   "example": "Umbrella. What does umbrella start with?"
+  },
+  {
+   "key": "w:van",
+   "say": "van",
+   "example": "It is van."
+  },
+  {
+   "key": "w:vest",
+   "say": "vest",
+   "example": "It is vest."
+  },
+  {
+   "key": "w:was",
+   "say": "was",
+   "example": "Tap the word: was."
+  },
+  {
+   "key": "w:we",
+   "say": "we",
+   "example": "Tap the word: we."
+  },
+  {
+   "key": "w:web",
+   "say": "web",
+   "example": "It is web."
+  },
+  {
+   "key": "w:wheel",
+   "say": "wheel",
+   "example": "Wheel. What does wheel start with?"
+  },
+  {
+   "key": "w:wig",
+   "say": "wig",
+   "example": "It is wig."
+  },
+  {
+   "key": "w:yo-yo",
+   "say": "yo-yo",
+   "example": "Yo-yo. What does yo-yo start with?"
+  },
+  {
+   "key": "w:you",
+   "say": "you",
+   "example": "Tap the word: you."
+  },
+  {
+   "key": "w:zebra",
+   "say": "zebra",
+   "example": "Zebra. What does zebra start with?"
+  },
+  {
+   "key": "n:eight",
+   "say": "eight",
+   "example": "It is eight."
+  },
+  {
+   "key": "n:eighteen",
+   "say": "eighteen",
+   "example": "It is eighteen."
+  },
+  {
+   "key": "n:eleven",
+   "say": "eleven",
+   "example": "It is eleven."
+  },
+  {
+   "key": "n:fifteen",
+   "say": "fifteen",
+   "example": "It is fifteen."
+  },
+  {
+   "key": "n:fifty",
+   "say": "fifty",
+   "example": "It is fifty."
+  },
+  {
+   "key": "n:five",
+   "say": "five",
+   "example": "It is five."
+  },
+  {
+   "key": "n:forty",
+   "say": "forty",
+   "example": "It is forty."
+  },
+  {
+   "key": "n:forty-eight",
+   "say": "forty-eight",
+   "example": "It is forty-eight."
+  },
+  {
+   "key": "n:forty-five",
+   "say": "forty-five",
+   "example": "It is forty-five."
+  },
+  {
+   "key": "n:forty-four",
+   "say": "forty-four",
+   "example": "It is forty-four."
+  },
+  {
+   "key": "n:forty-nine",
+   "say": "forty-nine",
+   "example": "It is forty-nine."
+  },
+  {
+   "key": "n:forty-one",
+   "say": "forty-one",
+   "example": "It is forty-one."
+  },
+  {
+   "key": "n:forty-seven",
+   "say": "forty-seven",
+   "example": "It is forty-seven."
+  },
+  {
+   "key": "n:forty-six",
+   "say": "forty-six",
+   "example": "It is forty-six."
+  },
+  {
+   "key": "n:forty-three",
+   "say": "forty-three",
+   "example": "It is forty-three."
+  },
+  {
+   "key": "n:forty-two",
+   "say": "forty-two",
+   "example": "It is forty-two."
+  },
+  {
+   "key": "n:four",
+   "say": "four",
+   "example": "It is four."
+  },
+  {
+   "key": "n:fourteen",
+   "say": "fourteen",
+   "example": "It is fourteen."
+  },
+  {
+   "key": "n:nine",
+   "say": "nine",
+   "example": "It is nine."
+  },
+  {
+   "key": "n:nineteen",
+   "say": "nineteen",
+   "example": "It is nineteen."
+  },
+  {
+   "key": "n:one",
+   "say": "one",
+   "example": "One star! Pick a sticker."
+  },
+  {
+   "key": "n:seven",
+   "say": "seven",
+   "example": "It is seven."
+  },
+  {
+   "key": "n:seventeen",
+   "say": "seventeen",
+   "example": "It is seventeen."
+  },
+  {
+   "key": "n:six",
+   "say": "six",
+   "example": "One star! Get six right to earn a sticker. Try again!"
+  },
+  {
+   "key": "n:sixteen",
+   "say": "sixteen",
+   "example": "It is sixteen."
+  },
+  {
+   "key": "n:ten",
+   "say": "ten",
+   "example": "It is ten."
+  },
+  {
+   "key": "n:thirteen",
+   "say": "thirteen",
+   "example": "It is thirteen."
+  },
+  {
+   "key": "n:thirty",
+   "say": "thirty",
+   "example": "It is thirty."
+  },
+  {
+   "key": "n:thirty-eight",
+   "say": "thirty-eight",
+   "example": "It is thirty-eight."
+  },
+  {
+   "key": "n:thirty-five",
+   "say": "thirty-five",
+   "example": "It is thirty-five."
+  },
+  {
+   "key": "n:thirty-four",
+   "say": "thirty-four",
+   "example": "It is thirty-four."
+  },
+  {
+   "key": "n:thirty-nine",
+   "say": "thirty-nine",
+   "example": "It is thirty-nine."
+  },
+  {
+   "key": "n:thirty-one",
+   "say": "thirty-one",
+   "example": "It is thirty-one."
+  },
+  {
+   "key": "n:thirty-seven",
+   "say": "thirty-seven",
+   "example": "It is thirty-seven."
+  },
+  {
+   "key": "n:thirty-six",
+   "say": "thirty-six",
+   "example": "It is thirty-six."
+  },
+  {
+   "key": "n:thirty-three",
+   "say": "thirty-three",
+   "example": "It is thirty-three."
+  },
+  {
+   "key": "n:thirty-two",
+   "say": "thirty-two",
+   "example": "It is thirty-two."
+  },
+  {
+   "key": "n:three",
+   "say": "three",
+   "example": "Three stars! Pick a sticker."
+  },
+  {
+   "key": "n:twelve",
+   "say": "twelve",
+   "example": "It is twelve."
+  },
+  {
+   "key": "n:twenty",
+   "say": "twenty",
+   "example": "It is twenty."
+  },
+  {
+   "key": "n:twenty-eight",
+   "say": "twenty-eight",
+   "example": "It is twenty-eight."
+  },
+  {
+   "key": "n:twenty-five",
+   "say": "twenty-five",
+   "example": "It is twenty-five."
+  },
+  {
+   "key": "n:twenty-four",
+   "say": "twenty-four",
+   "example": "It is twenty-four."
+  },
+  {
+   "key": "n:twenty-nine",
+   "say": "twenty-nine",
+   "example": "It is twenty-nine."
+  },
+  {
+   "key": "n:twenty-one",
+   "say": "twenty-one",
+   "example": "It is twenty-one."
+  },
+  {
+   "key": "n:twenty-seven",
+   "say": "twenty-seven",
+   "example": "It is twenty-seven."
+  },
+  {
+   "key": "n:twenty-six",
+   "say": "twenty-six",
+   "example": "It is twenty-six."
+  },
+  {
+   "key": "n:twenty-three",
+   "say": "twenty-three",
+   "example": "It is twenty-three."
+  },
+  {
+   "key": "n:twenty-two",
+   "say": "twenty-two",
+   "example": "It is twenty-two."
+  },
+  {
+   "key": "n:two",
+   "say": "two",
+   "example": "Two stars! Pick a sticker."
+  },
+  {
+   "key": "n:zero",
+   "say": "zero",
+   "example": "Zero, one, two. What number comes next?"
+  },
+  {
+   "key": "l:a",
+   "say": "a",
+   "example": "Find the letter a."
+  },
+  {
+   "key": "l:b",
+   "say": "b",
+   "example": "Find the letter B."
+  },
+  {
+   "key": "l:c",
+   "say": "c",
+   "example": "Find the letter c."
+  },
+  {
+   "key": "l:ch",
+   "say": "ch",
+   "example": "It is ch."
+  },
+  {
+   "key": "l:ck",
+   "say": "ck",
+   "example": "It is spelled d, u, ck."
+  },
+  {
+   "key": "l:d",
+   "say": "d",
+   "example": "Find the letter d."
+  },
+  {
+   "key": "l:e",
+   "say": "e",
+   "example": "Find the letter e."
+  },
+  {
+   "key": "l:f",
+   "say": "f",
+   "example": "Find the letter F."
+  },
+  {
+   "key": "l:g",
+   "say": "g",
+   "example": "Find the letter g."
+  },
+  {
+   "key": "l:h",
+   "say": "h",
+   "example": "Find the letter h."
+  },
+  {
+   "key": "l:i",
+   "say": "i",
+   "example": "Find the letter I."
+  },
+  {
+   "key": "l:j",
+   "say": "j",
+   "example": "Find the letter j."
+  },
+  {
+   "key": "l:k",
+   "say": "k",
+   "example": "Find the letter k."
+  },
+  {
+   "key": "l:l",
+   "say": "l",
+   "example": "Find the letter L."
+  },
+  {
+   "key": "l:m",
+   "say": "m",
+   "example": "Find the letter M."
+  },
+  {
+   "key": "l:n",
+   "say": "n",
+   "example": "Find the letter n."
+  },
+  {
+   "key": "l:o",
+   "say": "o",
+   "example": "Find the letter O."
+  },
+  {
+   "key": "l:p",
+   "say": "p",
+   "example": "Find the letter P."
+  },
+  {
+   "key": "l:q",
+   "say": "q",
+   "example": "Find the letter Q."
+  },
+  {
+   "key": "l:qu",
+   "say": "qu",
+   "example": "It is qu."
+  },
+  {
+   "key": "l:r",
+   "say": "r",
+   "example": "Find the letter R."
+  },
+  {
+   "key": "l:s",
+   "say": "s",
+   "example": "Find the letter s."
+  },
+  {
+   "key": "l:sh",
+   "say": "sh",
+   "example": "It is sh."
+  },
+  {
+   "key": "l:t",
+   "say": "t",
+   "example": "Find the letter t."
+  },
+  {
+   "key": "l:th",
+   "say": "th",
+   "example": "It is th."
+  },
+  {
+   "key": "l:u",
+   "say": "u",
+   "example": "Find the letter u."
+  },
+  {
+   "key": "l:v",
+   "say": "v",
+   "example": "Find the letter v."
+  },
+  {
+   "key": "l:w",
+   "say": "w",
+   "example": "Find the letter w."
+  },
+  {
+   "key": "l:wh",
+   "say": "wh",
+   "example": "It is wh."
+  },
+  {
+   "key": "l:x",
+   "say": "x",
+   "example": "Find the letter x."
+  },
+  {
+   "key": "l:y",
+   "say": "y",
+   "example": "Find the letter y."
+  },
+  {
+   "key": "l:z",
+   "say": "z",
+   "example": "Find the letter z."
+  }
+ ]
+}

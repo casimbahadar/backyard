@@ -1,11 +1,16 @@
-// The one-time sound recorder, with Chromium's fake microphone (a steady tone).
+// The recorders inside Grown-ups, Settings, with Chromium's fake microphone (a steady
+// tone): record a voice piece and a letter sound, keep them on the device, move them to
+// another device with a file, and have the app read a quest in the recorded voice.
 // Run: node test-recorder.mjs   Exit 0 = passed, 1 = a check failed, 2 = crashed.
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
+import { mkdirSync } from 'node:fs';
 import { join, dirname, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = dirname(fileURLToPath(import.meta.url));
+const out = join(root, 'test-output', 'ui-out');
+mkdirSync(out, { recursive: true });
 const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.ttf': 'font/ttf' };
 const failures = [];
 let passed = 0;
@@ -18,6 +23,8 @@ const server = createServer(async (req, res) => {
     res.end(body);
   } catch { res.writeHead(404); res.end(); }
 });
+const kid = { id: 'pa', name: 'Ava', grade: 'k', dailyGoal: 3, taughtCount: 32, taughtLocked: false, readWords: [], readLog: {}, attempts: {}, unlocked: [], chosenNode: 'on-k-math/A6.3', stickers: [], pendingStickers: 0, sheetRewards: [], days: {}, quest: null };
+const seed = JSON.stringify({ version: 3, sheets: {}, results: {}, profiles: [kid], activeProfile: 'pa', settings: { pin: '1234', voiceOff: false, theme: 'bright' } });
 
 let browser;
 try {
@@ -25,53 +32,104 @@ try {
   const base = `http://127.0.0.1:${server.address().port}`;
   const { chromium } = await import(process.env.PLAYWRIGHT_MODULE ?? 'playwright');
   browser = await chromium.launch({ args: ['--no-sandbox', '--use-fake-device-for-media-stream', '--use-fake-ui-for-media-stream', '--autoplay-policy=no-user-gesture-required'] });
-  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, acceptDownloads: true, permissions: ['microphone'] });
+  const newCtx = async () => {
+    const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, acceptDownloads: true, permissions: ['microphone'] });
+    await ctx.addInitScript(v => { if (!sessionStorage.getItem('s')) { localStorage.setItem('backyard', v); sessionStorage.setItem('s', '1'); } sessionStorage.setItem('backyard-parent', 'open'); }, seed);
+    return ctx;
+  };
+  const ctx = await newCtx();
   const page = await ctx.newPage();
   const errors = [];
   page.on('pageerror', e => errors.push(e.message));
-  await page.goto(`${base}/record-sounds.html`);
-  await page.waitForFunction(() => window.__recorderReady);
-  check((await page.textContent('#progress')) === '0 of 28 sounds recorded.', 'the recorder does not list 28 sounds');
-  const app = await (await ctx.newPage());
-  await app.goto(`${base}/parent.html`);
-  check(!(await app.content()).includes('record-sounds'), 'the parent area links to the recorder');
-  await app.close();
+  const openTo = async (p, which) => {
+    await p.goto(`${base}/parent.html`);
+    await p.waitForFunction(() => window.__parentReady);
+    await p.click('[data-tab="settings"]');
+    await p.click(which);
+    await p.waitForSelector('#rec-list .vrow');
+  };
+  const recordFirst = async p => {
+    const key = await p.$eval('#rec-list .vrow', r => r.dataset.key);
+    await p.click('#rec-list .vrow .rec');
+    await p.waitForTimeout(1200);
+    if (await p.$eval('#rec-list .vrow .rec', b => b.textContent) === 'Stop') await p.click('#rec-list .vrow .rec');
+    await p.waitForFunction(() => /Kept/.test(document.getElementById('rec-status').textContent), null, { timeout: 8000 });
+    return key;
+  };
 
-  await page.click('.rec-row[data-phoneme="m"] .rec');
-  await page.waitForFunction(() => /Kept \/m\//.test(document.getElementById('status').textContent), null, { timeout: 8000 });
-  check((await page.textContent('#progress')) === '1 of 28 sounds recorded.', 'the recording did not count');
-  check(await page.$eval('.rec-row[data-phoneme="m"] .rec', b => b.textContent) === 'Redo', 'the recorded sound does not offer Redo');
-  const clip = await page.evaluate(() => JSON.parse(localStorage.getItem('backyard-recorder')).m);
-  check(clip.startsWith('data:audio/wav;base64,'), 'the clip is not stored as WAV');
-  const seconds = await page.evaluate(async src => {
-    const bytes = Uint8Array.from(atob(src.split(',')[1]), c => c.charCodeAt(0));
-    return (await new AudioContext().decodeAudioData(bytes.buffer)).duration;
-  }, clip);
-  check(seconds > 0.3 && seconds < 2.2, `the clip lasts ${seconds.toFixed(2)} s, outside 0.3 to 2.2 s`);
-  const silent = await page.evaluate(async () => (await import('./record-sounds.js')).trim(new Array(22050).fill(0.001), 22050));
-  check(silent === null, 'silence was kept as a clip');
+  // 1. Your voice, from Settings.
+  await openTo(page, '#open-voice');
+  const total = Number((await page.textContent('#rec-progress')).match(/of (\d+)/)[1]);
+  check(total > 280, `the voice list has only ${total} pieces`);
+  await page.screenshot({ path: join(out, 'recorder-voice-390.png') });
+  const vKey = await recordFirst(page);
+  const stored = await page.evaluate(async k => (await (await import('./audio-store.js')).allClips('voice'))[k], vKey);
+  check(stored && stored.src.startsWith('data:audio/') && stored.end > stored.start && stored.gain > 0, 'the voice piece was not kept on the device with its start, end and loudness');
+  check((await page.textContent('#rec-progress')).startsWith('1 of'), 'the progress line did not count the recording');
+  const [dl] = await Promise.all([page.waitForEvent('download'), page.click('#rec-export')]);
+  const file = join(out, 'voice-file.json');
+  await dl.saveAs(file);
+  const vf = JSON.parse(await readFile(file, 'utf8'));
+  check(vf.kind === 'sticker-yard-voice' && Object.keys(vf.clips).length === 1, 'the voice file has the wrong shape');
+  await page.click('#rec-back');
+  await page.waitForSelector('#open-voice');
+  check((await page.textContent('#voice-status')).startsWith('1 of'), 'Settings did not count the recorded piece');
 
-  await page.reload();
-  await page.waitForFunction(() => window.__recorderReady);
-  check((await page.textContent('#progress')) === '1 of 28 sounds recorded.', 'the recording did not survive a reload');
+  // 2. Letter sounds, from Settings.
+  await page.click('#open-sounds');
+  await page.waitForSelector('#rec-list .vrow');
+  check(Number((await page.textContent('#rec-progress')).match(/of (\d+)/)[1]) === 28, 'the letter-sound list is not 28 sounds');
+  const sKey = await recordFirst(page);
+  const sStored = await page.evaluate(async k => (await (await import('./audio-store.js')).allClips('sounds'))[k], sKey);
+  check(!!sStored, 'the letter sound was not kept on the device');
 
-  const [download] = await Promise.all([page.waitForEvent('download'), page.click('#export')]);
-  const file = join(root, 'test-output', 'ui-out', 'clips-export.json');
-  await download.saveAs(file);
-  const bundle = JSON.parse(await readFile(file, 'utf8'));
-  check(bundle.version === 1 && Object.keys(bundle.clips).join() === 'm', 'the saved clips.json has the wrong shape');
-  check((await page.textContent('#status')).includes('27 sounds are still missing'), 'saving early did not say what is missing');
+  // 3. Another device: load the file there.
+  const ctx2 = await newCtx();
+  const other = await ctx2.newPage();
+  await openTo(other, '#open-voice');
+  check((await other.textContent('#rec-progress')).startsWith('0 of'), 'a fresh device already had recordings');
+  await other.setInputFiles('#rec-import', file);
+  await other.waitForFunction(() => /Loaded 1 recording/.test(document.getElementById('rec-status').textContent), null, { timeout: 8000 });
+  check((await other.textContent('#rec-progress')).startsWith('1 of'), 'loading the file did not add the recording');
+  const bad = join(out, 'not-voice.json');
+  await (await import('node:fs/promises')).writeFile(bad, '{"kind":"something-else","clips":{}}');
+  await other.setInputFiles('#rec-import', bad);
+  await other.waitForFunction(() => /not a Sticker Yard/.test(document.getElementById('rec-status').textContent));
+  check(true, '');
 
-  // The saved file, dropped in as clips.json, is picked up by the app.
-  const p2 = await ctx.newPage();
-  await p2.route('**/clips.json', r => r.fulfill({ path: file }));
-  await p2.addInitScript(() => { localStorage.setItem('backyard', JSON.stringify({ version: 3, sheets: {}, results: {}, profiles: [], activeProfile: null, settings: { pin: '1234', voiceOff: false } })); sessionStorage.setItem('backyard-parent', 'open'); });
-  await p2.goto(`${base}/parent.html`);
-  await p2.waitForFunction(() => window.__parentReady);
-  await p2.click('[data-tab="settings"]');
-  await p2.waitForFunction(() => /letter sounds are ready/.test(document.getElementById('sounds-status').textContent));
-  check((await p2.textContent('#sounds-status')).startsWith('1 of 28'), 'the app did not count the exported sound');
+  // 4. With every piece recorded on this device, the app reads the quest in that voice.
+  const pieces = JSON.parse(await readFile(join(root, 'voice-pieces.json'), 'utf8')).pieces;
+  await page.evaluate(async ({ keys, src }) => {
+    const { saveClips } = await import('./audio-store.js');
+    await saveClips('voice', Object.fromEntries(keys.map(k => [k, { src, start: 0, end: 0.2, gain: 1 }])));
+  }, { keys: pieces.map(p => p.key), src: stored.src });
+  const app = await ctx.newPage();
+  await app.goto(`${base}/index.html?test`);
+  await app.waitForFunction(() => window.__by?.ready);
+  await app.click('#play');
+  await app.waitForSelector('[data-screen="quest"]');
+  await app.waitForTimeout(300);
+  check((await app.evaluate(() => window.__by.voiced.length)) >= 1, 'the app did not use the voice recorded on this device');
 
+  // 5. The Arabic recorder: 110 pieces; with all of them recorded, a Qaida lesson plays them.
+  await openTo(page, '#open-arabic');
+  check(Number((await page.textContent('#rec-progress')).match(/of (\d+)/)[1]) === 110, 'the Arabic list is not 110 pieces');
+  await recordFirst(page);
+  const arKeys = await page.evaluate(async () => (await import('./arabic.js')).arabicPieces().map(x => x.key));
+  await page.evaluate(async ({ keys, src }) => { const { saveClips } = await import('./audio-store.js'); await saveClips('arabic', Object.fromEntries(keys.map(k => [k, { src, start: 0, end: 0.2, gain: 1 }]))); }, { keys: arKeys, src: stored.src });
+  const arApp = await ctx.newPage();
+  await arApp.goto(`${base}/index.html?test`);
+  await arApp.waitForFunction(() => window.__by?.ready);
+  // Switch the Qaida on for this child, then reload so the app picks it up.
+  await arApp.evaluate(() => { const d = JSON.parse(localStorage.getItem('backyard')); d.profiles[0].noorani = true; d.profiles[0].chosenNode = 'noorani/Q4'; localStorage.setItem('backyard', JSON.stringify(d)); });
+  await arApp.reload();
+  await arApp.waitForFunction(() => window.__by?.ready);
+  await arApp.click('#play');
+  await arApp.waitForSelector('[data-screen="quest"]');
+  await arApp.waitForFunction(() => window.__by.arabicVoiced.length > 0 || window.__by.arabic.length > 0, null, { timeout: 4000 });
+  check((await arApp.evaluate(() => window.__by.arabicVoiced.length)) === 1, 'the Qaida lesson did not use the Arabic recordings');
+
+  check(!(await (async () => { const p = await ctx.newPage(); await p.goto(`${base}/parent.html`); const c = await p.content(); await p.close(); return c; })()).includes('record-voice.html'), 'the parent area still points to the old recorder page');
   check(errors.length === 0, `page errors: ${errors.join('; ')}`);
   console.log(`checks passed: ${passed}, failed: ${failures.length}`);
   for (const f of failures) console.log(`FAIL ${f}`);

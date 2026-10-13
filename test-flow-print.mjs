@@ -52,7 +52,7 @@ try {
   await page.click('[data-tab="print"]');
 
   const nodes = await page.$$eval('#node option', os => os.map(o => o.value));
-  check(nodes.length === 24, `expected 24 skills in the list, found ${nodes.length}`);
+  check(nodes.length === 28, `expected 28 skills in the list, found ${nodes.length}`);
   const made = [];
 
   for (const [i, node] of nodes.entries()) {
@@ -108,6 +108,7 @@ try {
     const keyPage = texts.findIndex(t => t.includes('Grown-up page'));
     check(texts[0].includes(`Sheet ${id}`) && !texts[0].includes('Grown-up page'), `${node}: page 1 is not the worksheet alone`);
     check(keyPage > 0, `${node}: grown-up page does not start on its own page`);
+    check(keyPage === 1, `${node}: the ${count} questions do not fit on one page (grown-up page starts on page ${keyPage + 1})`);
     check(keyPage > 0 && texts[keyPage].includes(`Sheet ${id}`), `${node}: grown-up page is missing the sheet ID`);
     check(texts.slice(0, keyPage).every(t => !t.includes('Answer:')), `${node}: answers printed on the child's pages`);
     made.push({ node, id, count, keyAnswers, pages, keyPage: keyPage + 1, file });

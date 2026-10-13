@@ -8,7 +8,7 @@ import { pictureSvg, sceneSvg } from './pictures.js';
 import { tensOnes, thing, ribbon, money } from './visuals.js';
 
 // Worksheet pictures are the outline versions, for colouring in.
-const pic = (word, size = '1in') => pictureSvg(word, { outline: true, size });
+const pic = (word, size = '0.85in') => pictureSvg(word, { outline: true, size });
 import { childContext } from './packs.js';
 
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -45,6 +45,7 @@ export function sayLine(item) {
   const p = item.print;
   switch (p.kind) {
     case 'count-and-write': return 'Count the circles. Write how many.';
+    case 'circle-arabic': return `${p.say}. Circle it.`;
     case 'tens-ones-write': return 'Count the tens and the ones. Write how many in all.';
     case 'sequence-write-next': return `${item.prompt.speech} Write it in the box.`;
     case 'circle-group': return `${item.prompt.speech} Circle it, or circle same.`;
@@ -72,6 +73,7 @@ export function answerText(item) {
     case 'money': return `The ${MONEY[a].name}`;
     case 'fix-sentence': return `"${a}"`;
     case 'sight-word': return `${a}`;
+    case 'arabic': return `${a} (${item.facts.roman})`;
     case 'belongs': return `The ${a}`;
     case 'measure': return item.facts.mode === 'length' ? `The ${a} ribbon` : `The ${a}`;
     case 'blend-word': case 'read-cvc': return `The ${a}`;
@@ -96,50 +98,52 @@ function traceRow(letter) {
   const upper = letter !== letter.toLowerCase();
   const size = (2048 * (BASE - TOP) / (upper ? 1485 : 1600)).toFixed(2);
   const glyphs = [60, 170, 280].map(x => `<text x="${x}" y="${BASE}" font-size="${size}" text-anchor="middle">${esc(letter)}</text>`).join('');
-  return `<svg class="trace-row" viewBox="0 0 660 112" width="6.6in" height="1.12in" aria-hidden="true">`
-    + `<line class="guide" x1="0" x2="660" y1="${TOP}" y2="${TOP}"/>`
-    + `<line class="guide mid" x1="0" x2="660" y1="${MID.toFixed(2)}" y2="${MID.toFixed(2)}"/>`
-    + `<line class="guide base" x1="0" x2="660" y1="${BASE}" y2="${BASE}"/>${glyphs}</svg>`;
+  // Three letters to trace, then the rest of the line for her own.
+  return `<svg class="trace-row" viewBox="0 0 1150 112" width="6.4in" height="0.56in" aria-hidden="true">`
+    + `<line class="guide" x1="0" x2="1150" y1="${TOP}" y2="${TOP}"/>`
+    + `<line class="guide mid" x1="0" x2="1150" y1="${MID.toFixed(2)}" y2="${MID.toFixed(2)}"/>`
+    + `<line class="guide base" x1="0" x2="1150" y1="${BASE}" y2="${BASE}"/>${glyphs}</svg>`;
 }
 
-function counters(n) {
-  return `<span class="counters">${Array.from({ length: n }, () => counterSvg()).join('')}</span>`;
+function counters(n, size = '0.27in') {
+  return `<span class="counters">${Array.from({ length: n }, () => counterSvg(size)).join('')}</span>`;
 }
 
 function body(item) {
   const p = item.print;
   switch (p.kind) {
     case 'count-and-write': return `${counters(p.n)}<span class="write">${blankBox()}</span>`;
-    case 'circle-word': return `<span class="row read">${item.choices.map(c => `<span class="word">${esc(c)}</span>`).join('')}</span>`;
+    case 'circle-arabic': return `<span class="row arabic" dir="rtl" lang="ar">${item.choices.map(c => `<span class="ar">${esc(c)}</span>`).join('')}</span>`;
+    case 'circle-word': return `<span class="word-grid read">${item.choices.map(c => `<span class="word">${esc(c)}</span>`).join('')}</span>`;
     case 'circle-sentence': return `<span class="sentences read">${item.choices.map(c => `<span class="sentence-line">${esc(c)}</span>`).join('')}</span>`;
     case 'circle-money': return `<span class="row">${item.choices.map(c => money(c, { outline: true, scale: 1.3 })).join('')}</span>`;
     case 'circle-ribbon': return `<span class="ribbons">${p.lengths.map(l => ribbon(l, { outline: true, unit: 22 })).join('')}</span>`;
     case 'circle-picture-pair': return `<span class="row">${p.pictures.map(w => pic(w)).join('')}</span>`;
-    case 'circle-belongs': return `<span class="belong-group">${p.group.map(g => thing(g, { outline: true, size: '0.6in' })).join('')}</span><span class="row">${item.choices.map(c => thing(c, { outline: true, size: '0.75in' })).join('')}</span>`;
-    case 'tens-ones-write': return `${tensOnes(p.tens, p.ones, { outline: true, unit: 8 })}<span class="write">${blankBox()}</span>`;
+    case 'circle-belongs': return `<span class="belong-group">${p.group.map(g => thing(g, { outline: true, size: '0.42in' })).join('')}</span><span class="row">${item.choices.map(c => thing(c, { outline: true, size: '0.6in' })).join('')}</span>`;
+    case 'tens-ones-write': return `${tensOnes(p.tens, p.ones, { outline: true, unit: 4.4 })}<span class="write">${blankBox()}</span>`;
     case 'sequence-write-next': return `<span class="big">${p.shown.join('&nbsp;&nbsp;')}&nbsp;&nbsp;</span>${blankBox()}`;
-    case 'circle-group': return `<span class="group">${counters(p.left)}</span><span class="pill">same</span><span class="group">${counters(p.right)}</span>`;
+    case 'circle-group': return `<span class="group">${counters(p.left, '0.2in')}</span><span class="pill">same</span><span class="group">${counters(p.right, '0.2in')}</span>`;
     case 'circle-number': return `<span class="big">${p.left}</span><span class="big">${p.right}</span>`;
     case 'equation-write': return `<span class="big">${esc(p.text.replace(' = ?', ' ='))}</span>${blankBox()}`;
     case 'pattern-draw': {
-      const cells = p.shown.map(id => shapeSvg(pieceShape(id), '0.5in'));
+      const cells = p.shown.map(id => shapeSvg(pieceShape(id), '0.46in'));
       const gap = `<span class="blank-cell"></span>`;
       if (p.where === 'next') cells.push(gap);
       else if (p.where === 'before') cells.unshift(gap);
       else cells[p.blank] = gap;
       return `<span class="row">${cells.join('')}</span>`;
     }
-    case 'colour-shape': return `<span class="row">${item.choices.map(s => shapeSvg(s, '0.85in')).join('')}</span>`;
+    case 'colour-shape': return `<span class="row">${item.choices.map(s => shapeSvg(s, '0.7in')).join('')}</span>`;
     case 'circle-letter': return `<span class="row read">${item.choices.map(l => `<span class="letter">${esc(l)}</span>`).join('')}</span>`;
-    case 'circle-first-letter': return `${pic(p.picture)}<span class="row read">${item.choices.map(l => `<span class="letter">${esc(l)}</span>`).join('')}</span>`;
-    case 'sound-boxes-circle': return `<span class="row">${Array.from({ length: p.boxes }, () => blankBox('sm')).join('')}</span><span class="row">${p.pictures.map(w => (p.show[w] === 'word' ? `<span class="word read">${esc(w)}</span>` : pic(w))).join('')}</span>`;
+    case 'circle-first-letter': return `${pic(p.picture, '0.72in')}<span class="row read">${item.choices.map(l => `<span class="letter">${esc(l)}</span>`).join('')}</span>`;
+    case 'sound-boxes-circle': return `<span class="row">${Array.from({ length: p.boxes }, () => blankBox('sm')).join('')}</span><span class="row">${p.pictures.map(w => (p.show[w] === 'word' ? `<span class="word read">${esc(w)}</span>` : pic(w, '0.7in'))).join('')}</span>`;
     case 'match-word-to-picture': {
       const words = p.words.slice().sort();
-      return `<span class="match"><span class="col read">${words.map(w => `<span class="word">${esc(w)}</span>`).join('')}</span><span class="col">${p.words.map(w => pic(w, '0.8in')).join('')}</span></span>`;
+      return `<span class="match"><span class="mrow read">${words.map(w => `<span class="word">${esc(w)}</span>`).join('')}</span><span class="mrow">${p.words.map(w => pic(w, '0.62in')).join('')}</span></span>`;
     }
-    case 'word-circle-picture': return `<span class="word read">${esc(p.word)}</span><span class="row">${item.choices.map(w => pic(w, '0.8in')).join('')}</span>`;
-    case 'picture-write-letters': return `${pic(p.picture)}<span class="row">${Array.from({ length: p.boxes }, () => blankBox('sm')).join('')}</span>`;
-    case 'sentence-circle-picture': return `<span class="sentence read">${esc(p.sentence)}</span><span class="row">${p.pictures.map(sc => sceneSvg(sc, { outline: true, size: '1.3in' })).join('')}</span>`;
+    case 'word-circle-picture': return `<span class="word read">${esc(p.word)}</span><span class="row">${item.choices.map(w => pic(w, '0.72in')).join('')}</span>`;
+    case 'picture-write-letters': return `${pic(p.picture, '0.72in')}<span class="row">${Array.from({ length: p.boxes }, () => blankBox('sm')).join('')}</span>`;
+    case 'sentence-circle-picture': return `<span class="sentence read">${esc(p.sentence)}</span><span class="row">${p.pictures.map(sc => sceneSvg(sc, { outline: true, size: '0.82in' })).join('')}</span>`;
     case 'trace-letter': return traceRow(p.letter);
     default: throw new Error(`no print layout for ${p.kind}`);
   }
@@ -151,13 +155,16 @@ const STAR = '<svg viewBox="0 0 100 100" width="0.45in" height="0.45in"><polygon
 const STARS = `<span class="done-stars">${STAR}${STAR}${STAR}</span>`;
 
 function footer(pack, exp) {
-  return `<footer class="sheet-foot">${esc(exp.code)} &middot; Grade ${esc(pack.grade.toUpperCase())} &middot; ${esc(pack.document)} &middot; checked ${esc(pack.checkedOn)} &middot; ${esc(pack.sourceUrl)}</footer>`;
+  return `<footer class="sheet-foot">${esc(exp.code)} &middot; ${pack.grade === 'any' ? '' : `Grade ${esc(pack.grade.toUpperCase())} &middot; `}${esc(pack.document)} &middot; checked ${esc(pack.checkedOn)} &middot; ${esc(pack.sourceUrl)}</footer>`;
 }
 
 // Returns the sheet and grown-up page as one HTML string. The child's name is
 // left out on purpose and filled in with textContent by the caller.
 export function renderSheet(record, built) {
   const { items, pack, exp } = built;
+  // Ten questions on one page: patterns and tracing take ten full-width rows, every other
+  // kind sits in two columns of five.
+  const layout = items.every(it => ['pattern-draw', 'trace-letter'].includes(it.print.kind)) ? 'rows' : 'grid';
   const sheet = items.map((it, i) => `<li class="item" data-kind="${esc(it.print.kind)}"><span class="num">${i + 1}</span><span class="item-body">${body(it)}</span></li>`).join('');
   const key = items.map((it, i) => {
     const note = pictureNote(it);
@@ -171,7 +178,7 @@ export function renderSheet(record, built) {
       <span class="head-fields"><span>Name <span class="name-line" data-child-name></span></span><span>Date <span class="line"></span></span></span></span>
     <span class="sheet-id">Sheet ${esc(record.id)}</span>
   </header>
-  <ol class="items">${sheet}</ol>
+  <ol class="items ${layout}">${sheet}</ol>
   <p class="done-row"><span>I did it!</span>${STARS}</p>
   ${footer(pack, exp)}
 </section>
