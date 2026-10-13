@@ -47,6 +47,9 @@ const SCREENS = [
   { name: 'places', seed: store(profile({})), drive: async p => { await p.click('#places'); await p.waitForSelector('[data-screen="places"]'); } },
   { name: 'yard-space', seed: store(profile({ scene: 'space', stickers: [{ id: 'rocket', x: 30, y: 70, scene: 'space' }, { id: 'astronaut', x: 65, y: 60, scene: 'space', size: 1.4 }] })), drive: async () => {} },
   { name: 'quest-arabic', seed: store(profile({ noorani: true, chosenNode: 'noorani/Q4' })), drive: async p => { await p.click('#play'); await p.waitForSelector('[data-screen="quest"]'); } },
+  { name: 'books', seed: store(profile({ taughtCount: 32 })), drive: async p => { await p.click('#books'); await p.waitForSelector('[data-screen="books"]'); } },
+  { name: 'book-page', seed: store(profile({ taughtCount: 32 })), drive: async p => { await p.click('#books'); await p.click('[data-book="cat"]'); await p.waitForSelector('[data-screen="book"]'); } },
+  { name: 'album', seed: store(profile({ stickers: [{ id: 'cat', x: 30, y: 70 }, { id: 'rocket', x: 50, y: 50 }] })), drive: async p => { await p.click('#album'); await p.waitForSelector('[data-screen="album"]'); } },
   { name: 'pick', seed: store(profile({ chosenNode: 'on-k-math/A9.1' })), drive: async p => {
     await p.click('#play');
     for (let i = 0; i < 8; i++) {

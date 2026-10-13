@@ -6,6 +6,7 @@ import { BEACH_SEA } from './stickers-beach-sea.js';
 import { FARM_SNOW } from './stickers-farm-snow.js';
 import { SPACE_CAMP } from './stickers-space-camp.js';
 import { CITY_GARDEN } from './stickers-city-garden.js';
+import { SEASONAL, seasonalFor } from './seasons.js';
 
 const INK = '#23304a';
 const OWN = {
@@ -95,6 +96,10 @@ for (const [set, [first, second, from]] of Object.entries(SPLIT)) {
 }
 const placesOf = id => [PLACE_OF[id] ?? 'yard'];
 export const STICKERS = [...FIRST, ...Object.values(SETS).flatMap(set => Object.keys(set))].map(id => ({ id, set: ANIMALS.has(id) ? 'animal' : 'garden', places: placesOf(id) }));
+// Seasonal stickers are drawn like the rest but only offered in their season.
+for (const [id, x] of Object.entries(SEASONAL)) OWN[id] = x.body;
+export const SEASONAL_IDS = Object.keys(SEASONAL);
+export const ALL_STICKER_IDS = [...STICKERS.map(s => s.id), ...SEASONAL_IDS];
 
 function colouredShapes(id) {
   if (BORROWED[id]) return pictureShapes(BORROWED[id]);
@@ -118,12 +123,14 @@ export function stickerSvg(id, { shiny = false, size = 72 } = {}) {
 
 // Three different stickers to choose from: two that suit the place she is decorating
 // and one from anywhere. randomInts lets tests pin the choice.
-export function offerThree(randomInts = n => crypto.getRandomValues(new Uint32Array(n)), place = null) {
+export function offerThree(randomInts = n => crypto.getRandomValues(new Uint32Array(n)), place = null, seasons = []) {
   const r = randomInts(3);
   const fits = STICKERS.filter(s => !place || s.places.includes(place)).map(s => s.id);
   const out = [];
   for (let i = 0; i < 2; i++) out.push(fits.splice(r[i] % fits.length, 1)[0]);
-  const rest = STICKERS.map(s => s.id).filter(id => !out.includes(id));
+  // In a season, the third choice is a seasonal sticker; otherwise one from anywhere.
+  const seasonal = seasonalFor(seasons);
+  const rest = seasonal.length ? seasonal : STICKERS.map(s => s.id).filter(id => !out.includes(id));
   out.push(rest[r[2] % rest.length]);
   return out;
 }

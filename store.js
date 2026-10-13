@@ -63,6 +63,7 @@ export function problemWith(d) {
     if (!isObj(p) || typeof p.id !== 'string' || typeof p.name !== 'string' || p.name.length > 40) return 'a child record is broken';
     if (!['k', '1'].includes(p.grade)) return 'a child has an unknown grade';
     if (!Number.isInteger(p.taughtCount) || p.taughtCount < 1 || p.taughtCount > 64) return 'a sound count is out of range';
+    if (p.birthday != null && !(Array.isArray(p.birthday) && p.birthday.length === 2 && p.birthday[0] >= 1 && p.birthday[0] <= 12 && p.birthday[1] >= 1 && p.birthday[1] <= 31)) return 'a birthday is broken';
     if (p.taughtSounds !== undefined && (!Array.isArray(p.taughtSounds) || !p.taughtSounds.every(i => Number.isInteger(i) && i >= 0 && i < 64))) return 'the chosen sounds are broken';
     if (!Number.isInteger(p.dailyGoal) || p.dailyGoal < 1 || p.dailyGoal > (p.goalType === 'minutes' ? 60 : 12)) return 'a daily goal is out of range';
     if (p.goalType && !['quests', 'minutes'].includes(p.goalType)) return 'a daily goal has an unknown kind';

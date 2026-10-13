@@ -96,6 +96,19 @@ try {
       check(new Set(o).size === 3 && by(o[0]).places.includes(place) && by(o[1]).places.includes(place), `${place}: offer ${o.join(', ')} does not start with two stickers for this place`);
     }
   }
+  // Seasons and books.
+  const { seasonsOn } = await import('./seasons.js');
+  const { SEASONAL_IDS, ALL_STICKER_IDS } = await import('./stickers.js');
+  check(new Set(ALL_STICKER_IDS).size === ALL_STICKER_IDS.length && ALL_STICKER_IDS.length === 271, 'a seasonal sticker shares a name with another sticker');
+  check(seasonsOn(new Date('2026-12-20T12:00:00')).includes('winter') && !seasonsOn(new Date('2026-07-01T12:00:00')).includes('winter'), 'winter dates are wrong');
+  check(seasonsOn(new Date('2026-10-14T12:00:00'), { birthday: [10, 13] }).includes('birthday') && !seasonsOn(new Date('2026-10-30T12:00:00'), { birthday: [10, 13] }).includes('birthday'), 'birthday week is wrong');
+  const seasonal = offerThree(n => Uint32Array.from({ length: n }, (_, i) => i * 7), 'yard', ['ramadan']);
+  check(SEASONAL_IDS.includes(seasonal[2]) && !SEASONAL_IDS.includes(seasonal[0]), 'in Ramadan the third choice was not a seasonal sticker');
+  const { canRead, canReadBook, BOOKS } = await import('./books.js');
+  const kctx = childContext(kpack, packs, { taughtCount: 32, readWords: [] });
+  check(canRead('dog', kctx) && !canRead('said', kctx) && !canRead('kite', kctx), 'kindergarten reading rules are wrong (dog yes; said and kite not yet)');
+  const g1All = childContext(packs['on-1-language'], packs, { taughtCount: 37, readWords: [] });
+  check(canRead('said', g1All) && canRead('kite', g1All) && BOOKS.every(b => canReadBook(b, g1All)), 'with every Grade 1 sound and sight word, a book is still closed');
   console.log(`checks passed: ${passed}, failed: ${failures.length}`);
   for (const f of failures) console.log(`FAIL ${f}`);
   process.exit(failures.length ? 1 : 0);

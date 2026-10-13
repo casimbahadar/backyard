@@ -3,7 +3,7 @@ import { loadPacks, fullTaughtOrder } from './packs.js';
 import { load, save, migrate, empty, newProfile, problemWith } from './store.js';
 import { newSheetId, normaliseSheetId } from './sheet-id.js';
 import { sheetItems, renderSheet, answerText } from './worksheet.js';
-import { starsFor, masteredFor, attemptsFor, nodeKey, today, dayKey, growTaught, packsForGrade, packsFor, goalMet, SHEET_MINUTES, earnsSticker, neededFor } from './rules.js';
+import { starsFor, masteredFor, attemptsFor, nodeKey, today, dayKey, growTaught, packsForGrade, packsFor, goalMet, isMastered, pickNode, SHEET_MINUTES, earnsSticker, neededFor } from './rules.js';
 import { voiceStatus, onVoices, speak, unlock, clipSet, phonemeList, preferVoice, englishVoices, arabicVoice } from './audio.js';
 import { voiceBundle } from './voice.js';
 import { allClips } from './audio-store.js';
@@ -100,6 +100,9 @@ function kidsTab() {
   const picked = new Set(Array.isArray(p.taughtSounds) ? p.taughtSounds : order.map((_, i) => i).slice(0, p.taughtCount));
   const lock = el('input', { id: 'kid-lock', type: 'checkbox', checked: p.taughtLocked });
   const noorani = el('input', { id: 'kid-noorani', type: 'checkbox', checked: !!p.noorani });
+  const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const bMonth = el('select', { id: 'kid-bmonth' }, el('option', { value: '' }, 'Month'), MONTHS.map((m, i) => el('option', { value: String(i + 1), selected: p.birthday?.[0] === i + 1 }, m)));
+  const bDay = el('select', { id: 'kid-bday' }, el('option', { value: '' }, 'Day'), Array.from({ length: 31 }, (_, i) => el('option', { value: String(i + 1), selected: p.birthday?.[1] === i + 1 }, String(i + 1))));
   const count = el('p', { id: 'sound-count', class: 'help', 'aria-live': 'polite' });
   const sounds = el('div', { class: 'sounds', role: 'group', 'aria-label': 'Sounds taught' });
   const showSounds = () => {
@@ -124,7 +127,7 @@ function kidsTab() {
     if (picked.size < 4) return say(status, 'Choose at least 4 sounds, so there are words to read.', true);
     const chosen = [...picked].sort((a, b) => a - b);
     Object.assign(p, {
-      name: name.value.trim() || p.name, grade: grade.value, goalType: goal.value[0] === 'm' ? 'minutes' : 'quests', dailyGoal: Number(goal.value.slice(1)), noorani: noorani.checked, taughtSounds: chosen, taughtCount: chosen.length, taughtLocked: lock.checked,
+      name: name.value.trim() || p.name, grade: grade.value, goalType: goal.value[0] === 'm' ? 'minutes' : 'quests', dailyGoal: Number(goal.value.slice(1)), noorani: noorani.checked, birthday: bMonth.value && bDay.value ? [Number(bMonth.value), Number(bDay.value)] : null, taughtSounds: chosen, taughtCount: chosen.length, taughtLocked: lock.checked,
       chosenNode: next.value || null, unlocked: [...early.querySelectorAll('input:checked')].map(i => i.value)
     });
     persist();
@@ -160,6 +163,10 @@ function kidsTab() {
       el('p', { class: 'help' }, `Tap each sound ${p.name} has learned. Reading and spelling only use words made of these sounds. The app adds the next 4 each time ${p.name} learns the letter-sounds skill.`),
       quick, sounds, count,
       el('label', { class: 'check' }, lock, 'Only change sounds when I choose them')),
+    el('section', { class: 'group' },
+      el('h2', {}, 'Birthday'),
+      el('p', { class: 'help' }, `For a birthday party place and birthday stickers in ${p.name}'s birthday week. The year is not needed.`),
+      el('div', { class: 'two' }, el('label', { class: 'field' }, 'Month', bMonth), el('label', { class: 'field' }, 'Day', bDay))),
     el('section', { class: 'group' },
       el('h2', {}, 'Arabic'),
       el('label', { class: 'check' }, noorani, `Include Noorani Qaida lessons for ${p.name}`),
@@ -273,22 +280,34 @@ function markTab() {
 }
 
 // ---------- Results ----------
+// The weekly note: what she did in the last 7 days and what comes next, short enough to
+// read at a glance or print for her teacher.
 function weekLines(p) {
   const since = new Date(); since.setDate(since.getDate() - 6);
   const from = dayKey(since);
-  let quests = 0, sheets = 0;
-  const per = [];
+  let quests = 0, sheets = 0, stars = 0;
+  const per = [], mastered = [];
   for (const n of allNodes()) {
-    const week = (p.attempts[n.key] ?? []).filter(a => a.day >= from);
+    const all = p.attempts[n.key] ?? [];
+    const week = all.filter(a => a.day >= from);
     if (!week.length) continue;
-    for (const a of week) a.source === 'sheet' ? sheets++ : quests++;
+    for (const a of week) { a.source === 'sheet' ? sheets++ : quests++; stars += starsFor(a.right, a.total); }
     const right = week.reduce((s, a) => s + a.right, 0), total = week.reduce((s, a) => s + a.total, 0);
     per.push({ n, right, total, last: week.at(-1).day });
+    if (masteredFor(p, n.key) && !isMastered(all.filter(a => a.day < from))) mastered.push(n.e.label);
   }
-  const lines = [`This week: ${quests} quest${quests === 1 ? '' : 's'}, ${sheets} worksheet${sheets === 1 ? '' : 's'}.`];
+  const days = Object.keys(p.days ?? {}).filter(d => d >= from);
+  const minutes = Math.round(days.reduce((s, d) => s + (p.days[d].seconds ?? 0), 0) / 60);
+  const books = Object.entries(p.booksRead ?? {}).filter(([, d]) => d >= from).length;
+  const newStickers = p.stickers.filter(s => (s.at ?? '').slice(0, 10) >= from).length;
+  const lines = [`${p.name}, the last 7 days: practised on ${days.length} day${days.length === 1 ? '' : 's'}, about ${minutes} minute${minutes === 1 ? '' : 's'}.`,
+    `${quests} quest${quests === 1 ? '' : 's'} and ${sheets} worksheet${sheets === 1 ? '' : 's'}, ${stars} star${stars === 1 ? '' : 's'} and ${newStickers} new sticker${newStickers === 1 ? '' : 's'}.${books ? ` Read ${books} book${books === 1 ? '' : 's'}.` : ''}`];
+  if (mastered.length) lines.push(`Learned this week: ${mastered.join('; ')}.`);
   for (const x of per.sort((a, b) => (a.last < b.last ? 1 : -1)).slice(0, 3)) {
     lines.push(`${x.n.e.label}: ${x.right} of ${x.total}${x.right / x.total < 7 / 8 ? ', worth another go' : ''}.`);
   }
+  const next = pickNode(p, packs, () => true);
+  if (next) lines.push(`Next up: ${next.exp.label}.`);
   return lines;
 }
 
@@ -322,7 +341,10 @@ function resultsTab() {
     grid.append(b);
   }
   return [el('h1', {}, 'Results'), data.profiles.length > 1 ? el('label', { class: 'field' }, 'Child', pick) : null,
-    el('div', { class: 'week', id: 'week' }, weekLines(p).map(l => el('p', {}, l))),
+    el('div', { class: 'week', id: 'week' }, el('h2', {}, 'This week'), weekLines(p).map(l => el('p', {}, l)),
+      el('button', { id: 'print-week', type: 'button', class: 'btn quiet small', onclick: () => {
+        document.body.classList.add('print-week'); window.print(); setTimeout(() => document.body.classList.remove('print-week'), 500);
+      } }, 'Print this week')),
     el('p', { class: 'legend' }, el('span', {}, '★ learned'), el('span', {}, '◐ practising'), el('span', {}, '○ not started')),
     grid, detail];
 }

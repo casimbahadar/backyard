@@ -8,6 +8,10 @@ import { shape, piece, counters, tensOnes, thing, ribbon, money } from './visual
 import { NUMBER_WORDS } from './vocab.js';
 import { TREEHOUSE_SVG } from './scene.js';
 import { PLACES, placeOf } from './places.js';
+import { BOOKS, canReadBook, wordsIn } from './books.js';
+import { seasonsOn } from './seasons.js';
+import { ALL_STICKER_IDS } from './stickers.js';
+import { childContext } from './packs.js';
 import { speak as say, unlock, playSounds, clipSet, phonemeList, preferVoice, playVoice, audioReady, speakArabic } from './audio.js';
 import { voiceBundle, clipsFor, spokenAnswer } from './voice.js';
 import { allClips } from './audio-store.js';
@@ -168,7 +172,10 @@ function yard() {
   if (p.sheetRewards?.length) return sheetReward();
   const next = pickNode(p, packs, playable);
   const play = el('button', { id: 'play', class: 'play-sticker', onclick: () => startQuest(next), disabled: !next, html: PLAY_FACE });
-  const bottom = el('div', { class: 'yard-bottom' }, next ? play : el('p', { class: 'note' }, 'Ask a grown-up to pick what to practise next.'));
+  const bottom = el('div', { class: 'yard-bottom' },
+    el('span', { class: 'side' }, el('button', { id: 'books', class: 'btn round-btn', 'aria-label': 'Books', html: BOOK_ICON, onclick: shelf })),
+    next ? play : el('p', { class: 'note' }, 'Ask a grown-up to pick what to practise next.'),
+    el('span', { class: 'side' }, el('button', { id: 'album', class: 'btn round-btn', 'aria-label': 'Sticker album', html: ALBUM_ICON, onclick: album })));
   const scene = yardScene(p);
   show('yard', el('main', { class: 'yard' },
     scene,
@@ -250,16 +257,67 @@ function editStickers(p, scene, bottom) {
 
 // ---------- places ----------
 const PLACES_ICON = '<svg viewBox="0 0 40 40" width="30" height="30" aria-hidden="true"><rect x="5" y="7" width="13" height="11" rx="3" fill="currentColor"/><rect x="22" y="7" width="13" height="11" rx="3" fill="currentColor"/><rect x="5" y="22" width="13" height="11" rx="3" fill="currentColor"/><rect x="22" y="22" width="13" height="11" rx="3" fill="currentColor"/></svg>';
+// Seasonal places show in their season, and stay once she has stickers there.
+const seasonsNow = p => (hooks?.seasons ?? seasonsOn(new Date(), p));
+const placesFor = p => PLACES.filter(pl => !pl.season || pl.season.some(s => seasonsNow(p).includes(s)) || p.stickers.some(s => s.scene === pl.id));
 function choosePlace() {
   const p = profile();
   const count = id => p.stickers.filter(s => (s.scene ?? 'yard') === id).length;
   show('places', el('main', { class: 'places' },
     el('p', { class: 'end-line' }, 'Where do you want to play?'),
-    el('div', { class: 'place-grid' }, PLACES.map(pl => el('button', {
+    el('div', { class: 'place-grid' }, placesFor(p).map(pl => el('button', {
       class: `btn place-btn${placeOf(p.scene).id === pl.id ? ' here' : ''}`, 'data-place': pl.id, 'aria-label': `${pl.name}, ${count(pl.id)} stickers`,
       onclick: () => { p.scene = pl.id; persist(); speak(pl.name); yard(); }
     }, el('span', { class: 'place-art', html: pl.svg }), el('span', { class: 'place-name' }, pl.name))))));
   speak('Where do you want to play?');
+}
+
+// ---------- books and album ----------
+const BOOK_ICON = '<svg viewBox="0 0 40 40" width="30" height="30" aria-hidden="true"><path d="M4 9 Q12 6 20 10 V33 Q12 29 4 32 Z" fill="currentColor"/><path d="M36 9 Q28 6 20 10 V33 Q28 29 36 32 Z" fill="currentColor" opacity="0.65"/></svg>';
+const ALBUM_ICON = '<svg viewBox="0 0 40 40" width="30" height="30" aria-hidden="true"><rect x="7" y="5" width="26" height="31" rx="3" fill="currentColor"/><path d="M20 12 L22.5 17.5 L28.5 18 L24 22 L25.5 28 L20 25 L14.5 28 L16 22 L11.5 18 L17.5 17.5 Z" fill="#fff"/></svg>';
+// Which sounds and sight words she knows, the same way questions are chosen.
+function readingContext(p) {
+  const pack = packs[p.grade === '1' ? 'on-1-language' : 'on-k-language'];
+  return childContext(pack, packs, { taughtCount: p.taughtCount, taughtSounds: p.taughtSounds, readWords: p.readWords });
+}
+function shelf() {
+  const p = profile();
+  const ctx = readingContext(p);
+  show('books', el('main', { class: 'books' },
+    el('button', { class: 'btn btn-quiet back-small', onclick: yard }, 'Back to the yard'),
+    el('div', { class: 'shelf' }, BOOKS.map(b => {
+      const open = canReadBook(b, ctx);
+      return el('button', { class: `btn book${open ? '' : ' locked'}${p.booksRead?.[b.id] ? ' read' : ''}`, 'data-book': b.id, disabled: !open,
+        'aria-label': open ? b.title : `${b.title}, not yet`, onclick: () => readBook(b, 0) },
+        el('span', { class: 'cover', html: pictureSvg(b.cover, { size: '88px' }) }), el('span', { class: 'book-title' }, b.title));
+    }))));
+  speak('Pick a book to read.');
+}
+function readBook(b, i) {
+  const p = profile();
+  const [text, pic] = b.pages[i];
+  const words = text.split(/\s+/);
+  const last = i === b.pages.length - 1;
+  show('book', el('main', { class: 'book-page' },
+    el('p', { class: 'page-count' }, `${b.title}: page ${i + 1} of ${b.pages.length}`),
+    el('div', { class: 'page-art', html: pictureSvg(pic, { size: '200px' }) }),
+    el('p', { class: 'page-text', id: 'page-text' }, ...words.map(w => el('button', { class: 'word-btn', onclick: () => speak(wordsIn(w)[0] ?? w) }, w))),
+    el('div', { class: 'page-nav' },
+      el('button', { id: 'page-back', class: 'btn btn-quiet', disabled: i === 0, onclick: () => readBook(b, i - 1) }, 'Back'),
+      el('button', { id: 'read-to-me', class: 'btn btn-quiet', onclick: () => speak(text) }, 'Read to me'),
+      el('button', { id: 'page-next', class: 'btn btn-play', onclick: () => {
+        if (!last) return readBook(b, i + 1);
+        (p.booksRead ??= {})[b.id] = dayKey(); persist(); speak('The end! Great reading.'); shelf();
+      } }, last ? 'The end' : 'Next'))));
+}
+function album() {
+  const p = profile();
+  const have = new Set(p.stickers.map(s => s.id));
+  show('album', el('main', { class: 'album' },
+    el('button', { class: 'btn btn-quiet back-small', onclick: yard }, 'Back to the yard'),
+    el('p', { class: 'end-line', id: 'album-count' }, `${[...have].filter(id => ALL_STICKER_IDS.includes(id)).length} of ${ALL_STICKER_IDS.length} stickers`),
+    el('div', { class: 'album-grid' }, ALL_STICKER_IDS.map(id => el('span', { class: have.has(id) ? 'slot-sticker got' : 'slot-sticker', 'data-album': id, html: stickerSvg(id, { size: 64 }) })))));
+  speak('Your sticker album.');
 }
 
 // ---------- quest ----------
@@ -495,7 +553,7 @@ async function sheetReward() {
 }
 
 function pickSticker(shiny, goalNow, fromSheet = false) {
-  const offer = offerThree(hooks?.offerRandom ?? undefined, placeOf(profile().scene).id);
+  const offer = offerThree(hooks?.offerRandom ?? undefined, placeOf(profile().scene).id, seasonsNow(profile()));
   show('pick', el('main', { class: 'pick' }, el('p', { class: 'end-line read' }, 'Pick a sticker.'),
     el('div', { class: 'choices n3' }, offer.map(id => el('button', {
       class: 'btn choice sticker-choice', 'data-sticker': id, 'aria-label': id, html: stickerSvg(id, { shiny, size: 96 }),

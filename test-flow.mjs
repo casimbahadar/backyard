@@ -302,6 +302,42 @@ try {
   check(pn.errors.length === 0, `errors in the Arabic lesson: ${pn.errors.join('; ')}`);
   await pn.context().close();
 
+  // 12b. Books, album and seasons.
+  const pb = await open({ version: 3, sheets: {}, results: {}, activeProfile: 'pb', settings: { pin: null, voiceOff: false, theme: 'bright' },
+    profiles: [{ ...p1, id: 'pb', name: 'Ava', quest: null, days: {}, taughtCount: 20, stickers: [{ id: 'cat', x: 30, y: 70 }, { id: 'fanoos', x: 50, y: 60, scene: 'ramadan' }] }] });
+  await pb.click('#books');
+  await pb.waitForSelector('[data-screen="books"]');
+  const openBooks = await pb.$$eval('.book:not(.locked)', e => e.map(x => x.dataset.book));
+  check(openBooks.join() === 'dog,bus', `with 20 sounds the open books should be Dot the Dog and The Red Bus, found ${openBooks.join()}`);
+  await pb.screenshot({ path: join(shots, 'books.png') });
+  await pb.click('[data-book="dog"]');
+  check((await pb.$$eval('#page-text .word-btn', e => e.map(x => x.textContent).join(' '))) === 'I see a dog.', 'the first page is wrong');
+  await pb.click('#page-text .word-btn:last-child');
+  check((await pb.evaluate(() => window.__by.spoken.at(-1))) === 'dog', 'tapping a word did not read it');
+  await pb.screenshot({ path: join(shots, 'book-page.png') });
+  for (let i = 0; i < 5; i++) await pb.click('#page-next');
+  await pb.waitForSelector('[data-screen="books"]');
+  check(!!(await state(pb)).profiles[0].booksRead?.dog, 'finishing a book was not saved');
+  check(await pb.$('[data-book="dog"].read') !== null, 'the finished book is not marked on the shelf');
+  await pb.click('.back-small');
+  await pb.click('#album');
+  await pb.waitForSelector('[data-screen="album"]');
+  check((await pb.textContent('#album-count')) === '2 of 271 stickers', `the album count is wrong: ${await pb.textContent('#album-count')}`);
+  check((await pb.$$eval('.slot-sticker.got', e => e.map(x => x.dataset.album))).sort().join() === 'cat,fanoos', `the album did not colour the stickers she has: ${await pb.$$eval('.slot-sticker.got', e => e.map(x => x.dataset.album).join())}`);
+  await pb.screenshot({ path: join(shots, 'album.png') });
+  await pb.click('.back-small');
+  // Out of season, Ramadan night shows only because she already has a sticker there; the
+  // birthday party shows only in her birthday week.
+  await pb.evaluate(() => { window.__by.seasons = []; });
+  await pb.click('#places');
+  check(await pb.$('[data-place="ramadan"]') !== null && await pb.$('[data-place="party"]') === null, 'seasonal places did not follow the rules out of season');
+  await pb.evaluate(() => { window.__by.seasons = ['birthday']; });
+  await pb.click('[data-place="yard"]');
+  await pb.click('#places');
+  check(await pb.$('[data-place="party"]') !== null, 'the birthday party place did not appear in the birthday week');
+  check(pb.errors.length === 0, `errors in books or album: ${pb.errors.join('; ')}`);
+  await pb.context().close();
+
   // 13. Sticker editing: pick one up, resize it, move it behind, drag it, put it down.
   const pe = await open({ version: 3, sheets: {}, results: {}, activeProfile: 'pe', settings: { pin: null, voiceOff: false, theme: 'bright' },
     profiles: [{ ...p1, id: 'pe', name: 'Ava', quest: null, days: {}, stickers: [{ id: 'cat', x: 30, y: 70 }, { id: 'dog', x: 60, y: 70 }] }] });

@@ -1,11 +1,16 @@
 {
  "made": "2026-10-13",
- "lines": 1863,
+ "lines": 1868,
  "pieces": [
   {
    "key": "p:beach",
    "say": "Beach",
    "example": "Beach"
+  },
+  {
+   "key": "p:birthday party",
+   "say": "Birthday party",
+   "example": "Birthday party"
   },
   {
    "key": "p:campsite",
@@ -61,6 +66,11 @@
    "key": "p:great practice!",
    "say": "Great practice!",
    "example": "One star! That's all the stickers for today. Great practice!"
+  },
+  {
+   "key": "p:great reading.",
+   "say": "Great reading.",
+   "example": "The end! Great reading."
   },
   {
    "key": "p:here is the right one.",
@@ -143,6 +153,11 @@
    "example": "Outer space"
   },
   {
+   "key": "p:pick a book to read.",
+   "say": "Pick a book to read.",
+   "example": "Pick a book to read."
+  },
+  {
    "key": "p:pick a sticker.",
    "say": "Pick a sticker.",
    "example": "Your worksheet got stars! Pick a sticker."
@@ -161,6 +176,11 @@
    "key": "p:put the sounds together.",
    "say": "Put the sounds together.",
    "example": "Listen. Put the sounds together. Which one is it?"
+  },
+  {
+   "key": "p:ramadan night",
+   "say": "Ramadan night",
+   "example": "Ramadan night"
   },
   {
    "key": "p:read it.",
@@ -256,6 +276,11 @@
    "key": "p:that's all the stickers for today.",
    "say": "That's all the stickers for today.",
    "example": "One star! That's all the stickers for today. Great practice!"
+  },
+  {
+   "key": "p:the end!",
+   "say": "The end!",
+   "example": "The end! Great reading."
   },
   {
    "key": "p:the word is:",
@@ -391,6 +416,11 @@
    "key": "p:you did your quests today!",
    "say": "You did your quests today!",
    "example": "You did your quests today!"
+  },
+  {
+   "key": "p:your sticker album.",
+   "say": "Your sticker album.",
+   "example": "Your sticker album."
   },
   {
    "key": "p:your worksheet got",

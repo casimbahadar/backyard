@@ -104,9 +104,28 @@ try {
   check((await page.textContent('.status')).includes('at least 4'), 'fewer than 4 sounds was not refused');
   await page.click('#sounds-k');
   await page.click('#kid-save');
+  await page.selectOption('#kid-bmonth', '10');
+  await page.selectOption('#kid-bday', '13');
   await page.check('#kid-noorani');
   await page.click('#kid-save');
   check((await state(page)).profiles[0].noorani === true, 'the Noorani Qaida switch was not saved');
+  check(JSON.stringify((await state(page)).profiles[0].birthday) === '[10,13]', 'the birthday was not saved');
+  // The weekly note counts this week's practice, what was learned, books, and what is next.
+  await page.evaluate(() => {
+    const d = JSON.parse(localStorage.getItem('backyard'));
+    const p = d.profiles[0]; const today = new Date(Date.now() - 86400000); const day = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    p.attempts['on-k-math/A6.6'] = [{ right: 8, total: 8, day, source: 'quest' }, { right: 7, total: 8, day, source: 'quest' }];
+    p.days[day] = { quests: 2, seconds: 600 }; // yesterday, so today's goal is untouched
+    p.booksRead = { dog: day };
+    localStorage.setItem('backyard', JSON.stringify(d));
+  });
+  await page.reload(); await page.waitForFunction(() => window.__parentReady);
+  await page.click('[data-tab="results"]');
+  const note = await page.textContent('#week');
+  check(/practised on 1 day, about 10 minutes/.test(note) && /2 quests and 0 worksheets, 6 stars/.test(note) && /Read 1 book/.test(note) && /Learned this week/.test(note) && /Next up:/.test(note), `the weekly note is missing something: ${note}`);
+  check(await page.$('#print-week') !== null, 'the weekly note has no print button');
+  await page.screenshot({ path: join(out, 'weekly-note-390.png') });
+  await page.click('[data-tab="kids"]');
 
   // Print and mark a sheet for Ava; the reward reaches her yard.
   await page.click('[data-tab="print"]');
@@ -147,7 +166,7 @@ try {
   // Results: weekly summary and a node opened by tap.
   await page.click('[data-tab="results"]');
   const week = await page.$$eval('#week p', e => e.map(x => x.textContent));
-  check(week[0] === 'This week: 0 quests, 1 worksheet.', `weekly summary first line was "${week[0]}"`);
+  check(week.some(l => /2 quests and 1 worksheet/.test(l)), `the weekly note does not count the marked sheet: ${week.join(' | ')}`);
   check(week.some(l => l.startsWith('Read and write numbers to 20: 8 of 8')), `weekly summary misses the sheet: ${week.join(' | ')}`);
   await page.click('[data-key="on-k-math/A6.3"]');
   check((await page.textContent('#node-detail')).includes('Last practised'), 'tapping a node did not show when it was last practised');

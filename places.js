@@ -103,6 +103,29 @@ const PARK = wrap(`${wide(0, 600, '#a7dcf7')}
   <path d="M290 470 H322" fill="none" stroke="#e5484d" stroke-width="5"/>
   <ellipse cx="80" cy="540" rx="44" ry="14" fill="#3a9ad9"/><path d="M80 540 V510 M70 516 q10 -16 20 0" fill="none" stroke="#bfe6fb" stroke-width="4"/>`);
 
+const RAMADAN = wrap(`${wide(0, 600, '#1f2b5a')}
+  ${rep(50, i => `<circle cx="${(i * 83) % 420 - 10}" cy="${(i * 41) % 300}" r="${1 + (i % 3) * 0.7}" fill="#ffffff" stroke="none"/>`)}
+  <circle cx="300" cy="90" r="40" fill="#ffe9a3"/><circle cx="318" cy="78" r="34" fill="#1f2b5a" stroke="none"/>
+  <path d="M-40 140 Q60 180 160 140 T360 140 T560 140" fill="none" stroke="#c99a00" stroke-width="2"/>
+  ${[20, 90, 160, 230, 300, 370].map((x, i) => `<path d="M${x} ${150 + (i % 2) * 14} v10" fill="none" stroke="#c99a00"/><path d="M${x - 9} ${160 + (i % 2) * 14} h18 q5 18 0 34 h-18 q-5 -18 0 -34 Z" fill="${['#f2c94c', '#e5484d', '#4fb3a0'][i % 3]}"/>`).join('')}
+  <path d="M-1200 430 Q-300 410 0 430 Q200 410 400 430 Q900 410 1600 430 V600 H-1200 Z" fill="#3d4b7a"/>
+  <rect x="110" y="300" width="180" height="140" fill="#f4f1ea"/><path d="M140 304 Q140 230 200 220 Q260 230 260 304 Z" fill="#4fb3a0"/>
+  <path d="M200 220 V196" fill="none" stroke-width="3"/><circle cx="200" cy="190" r="6" fill="#ffd84d"/>
+  <rect x="60" y="250" width="26" height="190" fill="#f4f1ea"/><rect x="314" y="250" width="26" height="190" fill="#f4f1ea"/>
+  <path d="M60 250 L73 222 L86 250 Z M314 250 L327 222 L340 250 Z" fill="#4fb3a0"/>
+  <path d="M180 440 V390 Q200 366 220 390 V440 Z" fill="#23304a"/>
+  <g fill="#ffd84d" stroke="none"><rect x="130" y="340" width="20" height="26" rx="10"/><rect x="250" y="340" width="20" height="26" rx="10"/></g>`);
+
+const PARTY = wrap(`${wide(0, 600, '#fde7c8')}${wide(0, 40, '#f8bfd0')}
+  <path d="M-40 70 Q60 110 160 70 T360 70 T560 70" fill="none" stroke="#23304a" stroke-width="2"/>
+  ${[0, 50, 100, 150, 200, 250, 300, 350].map((x, i) => `<path d="M${x} ${78 + (i % 2) * 8} l14 4 l-8 26 Z" fill="${['#e5484d', '#ffc845', '#3a86d8', '#4fa53e', '#9b5de5'][i % 5]}"/>`).join('')}
+  ${[[50, 200, '#e5484d'], [90, 180, '#3a86d8'], [320, 190, '#ffc845'], [360, 210, '#9b5de5']].map(([x, y, c]) => `<path d="M${x} ${y + 34} q-6 40 6 80" fill="none" stroke="#23304a"/><ellipse cx="${x}" cy="${y}" rx="22" ry="28" fill="${c}"/>`).join('')}
+  ${wide(420, 180, '#e8b47e')}
+  <rect x="90" y="380" width="220" height="16" rx="4" fill="#ffffff"/><path d="M110 396 V470 M290 396 V470" fill="none" stroke-width="6"/>
+  <rect x="150" y="320" width="100" height="60" rx="6" fill="#f8bfd0"/><rect x="150" y="320" width="100" height="18" rx="6" fill="#ffffff"/>
+  <path d="M175 320 V300 M200 320 V296 M225 320 V300" fill="none" stroke-width="3"/>
+  <g fill="#ffd84d"><path d="M175 298 q-5 -8 0 -16 q5 8 0 16 Z"/><path d="M200 294 q-5 -8 0 -16 q5 8 0 16 Z"/><path d="M225 298 q-5 -8 0 -16 q5 8 0 16 Z"/></g>`);
+
 export const PLACES = [
   { id: 'yard', top: 'var(--sky)', name: 'Yard', svg: YARD_SVG },
   { id: 'beach', top: '#9fdcf7', name: 'Beach', svg: BEACH },
@@ -111,6 +134,9 @@ export const PLACES = [
   { id: 'sea', top: '#4fb3e8', name: 'Under the sea', svg: SEA },
   { id: 'space', top: '#1d2747', name: 'Outer space', svg: SPACE },
   { id: 'camp', top: '#f3a77a', name: 'Campsite', svg: CAMP },
-  { id: 'park', top: '#a7dcf7', name: 'City park', svg: PARK }
+  { id: 'park', top: '#a7dcf7', name: 'City park', svg: PARK },
+  // Seasonal places: shown in their season, and kept once she has stickers there.
+  { id: 'ramadan', top: '#1f2b5a', name: 'Ramadan night', svg: RAMADAN, season: ['ramadan', 'eid'] },
+  { id: 'party', top: '#f8bfd0', name: 'Birthday party', svg: PARTY, season: ['birthday'] }
 ];
 export const placeOf = id => PLACES.find(p => p.id === id) ?? PLACES[0];

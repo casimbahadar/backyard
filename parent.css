@@ -115,3 +115,11 @@ details summary { min-height: 44px; display: flex; align-items: center; font-wei
 button.to-yard { border: 0; cursor: pointer; }
 .vsay.ar { font: 400 2.2rem/1.6 "Noto Naskh Arabic", serif; direction: rtl; text-align: left; }
 @font-face { font-family: "Noto Naskh Arabic"; src: url("NotoNaskhArabic.ttf") format("truetype"); font-weight: 400 700; font-display: swap; }
+
+.two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s3); }
+.week h2 { margin: 0 0 var(--s2); }
+.week .btn { margin-top: var(--s3); }
+@media print {
+  body.print-week .tabs, body.print-week .to-yard, body.print-week main > :not(#week), body.print-week #print-week { display: none !important; }
+  body.print-week #week { border: 0; background: none; font-size: 13pt; }
+}

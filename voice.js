@@ -73,7 +73,8 @@ export const APP_LINES = [
   'You did your quests today!',
   'Here is the right one.',
   'Where do you want to play?',
-  'Yard', 'Beach', 'Farm', 'Snowy woods', 'Under the sea', 'Outer space', 'Campsite', 'City park',
+  'Yard', 'Beach', 'Farm', 'Snowy woods', 'Under the sea', 'Outer space', 'Campsite', 'City park', 'Ramadan night', 'Birthday party',
+  'Pick a book to read.', 'The end! Great reading.', 'Your sticker album.',
   ...[1, 2, 3].flatMap(n => {
     const words = `${NUMBER_WORDS[n][0].toUpperCase()}${NUMBER_WORDS[n].slice(1)} star${n > 1 ? 's' : ''}!`;
     return [`${words} Pick a sticker.`, `${words} That's all the stickers for today. Great practice!`, `${words} Get six right to earn a sticker. Try again!`];
