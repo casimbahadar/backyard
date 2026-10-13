@@ -1,0 +1,9 @@
+.rec-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.rec-row { display: grid; grid-template-columns: 3rem 1fr; gap: var(--s2) var(--s3); align-items: center; padding: var(--s3) 0; border-bottom: 2px solid var(--wash); }
+.rec-sound { font: 400 28px/1 "Andika", var(--body); text-align: center; }
+.rec-word { font-weight: 600; }
+.rec-buttons { grid-column: 2; display: flex; gap: var(--s2); }
+.rec-buttons .btn { flex: 1; max-width: none; }
+.rec-row.done .rec-sound { color: var(--learned); }
+.rec-row.recording .rec-buttons .rec { background: var(--warn); box-shadow: 0 4px 0 #5a1a10; }
+code { font-size: 15px; }

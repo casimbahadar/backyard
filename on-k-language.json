@@ -1,0 +1,138 @@
+{
+  "schemaVersion": 1,
+  "jurisdiction": "on",
+  "grade": "k",
+  "subject": "language",
+  "document": "The Kindergarten Curriculum (2026)",
+  "sourceUrl": "https://www.dcp.edu.gov.on.ca/en/curriculum/kindergarten/grades/jk-sk/kinder-curriculum-at-a-glance",
+  "documentUrl": "https://www.dcp.edu.gov.on.ca/en/curriculum/kindergarten/grades/jk-sk",
+  "checkedOn": "2026-10-11",
+  "checkedBy": "Opus build session, against the official PDF: The Ontario Curriculum, Kindergarten, 2026 (version issued December 2025), downloaded from the Ministry site on 2026-10-11. Every code here matches the PDF's Curriculum at a glance and Expectations by strand, and every taught-set grapheme is in the PDF's Language Foundations Continuum, Kindergarten to Grade 1.",
+  "supportingSources": [
+    {
+      "title": "Language Foundations Continuum for Reading and Writing, Kindergarten to Grade 4 (Ontario Ministry of Education, 2026)",
+      "url": "https://assets-us-01.kc-usercontent.com/fbd574c4-da36-0066-a0c5-849ffb2de96e/d46dfab6-b0bd-494a-b636-c0583fe83986/AODA%20compliant%20-%20Language_Foundations%20Continuum_2026%20(2).pdf",
+      "usedFor": "The kindergarten letter-sound set, the CV, VC and CVC word shapes, and the order of difficulty for blending: continuous sounds before stop sounds, and first sound before last and middle."
+    },
+    {
+      "title": "Kindergarten Curriculum (2026): Overall Expectations with Specific Expectations, Kawartha Pine Ridge DSB transcription, retrieved from the Ministry site 5 May 2026",
+      "url": "https://www.kprschools.ca/media/x0yfph5h/kindergarten-overall-expectations-specific-expectations-may6-1.pdf",
+      "usedFor": "Overall expectation titles. Cross-check only. Where it differs from the Ministry page, the Ministry page wins."
+    }
+  ],
+  "taughtSet": {
+    "orderSource": "UFLI Foundations kindergarten lesson order (lessons 1 to 48 and 50), as listed in EdReports' 2025 review, filtered to the graphemes the Ministry continuum names for kindergarten. Chosen because it introduces continuous sounds early, which the continuum recommends for blending. Not confirmed as the order any Ontario board uses. A school's own order replaces it in parent settings.",
+    "orderSourceUrl": "https://edreports.org/reports/detail/ufli-ela-k-2-2025/kindergarten/gateway-one",
+    "soundTypeNote": "soundType is this app's classification for ordering blending items. It is not a Ministry field.",
+    "startCount": 4,
+    "order": [
+      { "grapheme": "a",  "phoneme": "a",  "soundType": "continuous" },
+      { "grapheme": "m",  "phoneme": "m",  "soundType": "continuous" },
+      { "grapheme": "s",  "phoneme": "s",  "soundType": "continuous" },
+      { "grapheme": "t",  "phoneme": "t",  "soundType": "stop" },
+      { "grapheme": "p",  "phoneme": "p",  "soundType": "stop" },
+      { "grapheme": "f",  "phoneme": "f",  "soundType": "continuous" },
+      { "grapheme": "i",  "phoneme": "i",  "soundType": "continuous" },
+      { "grapheme": "n",  "phoneme": "n",  "soundType": "continuous" },
+      { "grapheme": "o",  "phoneme": "o",  "soundType": "continuous" },
+      { "grapheme": "d",  "phoneme": "d",  "soundType": "stop" },
+      { "grapheme": "c",  "phoneme": "k",  "soundType": "stop" },
+      { "grapheme": "u",  "phoneme": "u",  "soundType": "continuous" },
+      { "grapheme": "g",  "phoneme": "g",  "soundType": "stop" },
+      { "grapheme": "b",  "phoneme": "b",  "soundType": "stop" },
+      { "grapheme": "e",  "phoneme": "e",  "soundType": "continuous" },
+      { "grapheme": "s",  "phoneme": "z",  "soundType": "continuous", "position": "end", "note": "s as in has" },
+      { "grapheme": "k",  "phoneme": "k",  "soundType": "stop" },
+      { "grapheme": "h",  "phoneme": "h",  "soundType": "stop" },
+      { "grapheme": "r",  "phoneme": "r",  "soundType": "continuous" },
+      { "grapheme": "l",  "phoneme": "l",  "soundType": "continuous" },
+      { "grapheme": "w",  "phoneme": "w",  "soundType": "glide" },
+      { "grapheme": "j",  "phoneme": "j",  "soundType": "stop" },
+      { "grapheme": "y",  "phoneme": "y",  "soundType": "glide" },
+      { "grapheme": "x",  "phoneme": "ks", "soundType": "stop", "position": "end" },
+      { "grapheme": "qu", "phoneme": "kw", "soundType": "stop", "position": "start" },
+      { "grapheme": "v",  "phoneme": "v",  "soundType": "continuous" },
+      { "grapheme": "z",  "phoneme": "z",  "soundType": "continuous" },
+      { "grapheme": "ck", "phoneme": "k",  "soundType": "stop", "position": "end" },
+      { "grapheme": "sh", "phoneme": "sh", "soundType": "continuous" },
+      { "grapheme": "th", "phoneme": "th", "soundType": "continuous", "note": "unvoiced, as in thick" },
+      { "grapheme": "ch", "phoneme": "ch", "soundType": "stop" },
+      { "grapheme": "wh", "phoneme": "w",  "soundType": "glide", "position": "start" }
+    ]
+  },
+  "taughtWords": {
+    "source": "Irregular words named in EdReports' 2025 review of UFLI Foundations kindergarten lessons, limited to the ones short sentences need. A school's own list replaces it in parent settings.",
+    "sourceUrl": "https://edreports.org/reports/detail/ufli-ela-k-2-2025/kindergarten/gateway-one",
+    "unlocksWith": "A2.6",
+    "words": ["a", "I", "is", "the", "see", "to"]
+  },
+  "expectations": [
+    {
+      "code": "A2.1",
+      "overall": "A2",
+      "strand": "Foundations of Language and Mathematics",
+      "label": "Name capital and small letters, in order and out of order",
+      "note": "Paraphrase. The official wording is at sourceUrl.",
+      "prerequisites": [],
+      "skills": [
+        { "template": "hear-first-sound", "params": { "prompt": "letter-name", "letterCase": "both" } }
+      ]
+    },
+    {
+      "code": "A2.2",
+      "overall": "A2",
+      "strand": "Foundations of Language and Mathematics",
+      "label": "Form letters with the right strokes",
+      "note": "Paraphrase. The official wording is at sourceUrl. Practised on paper only.",
+      "prerequisites": [],
+      "skills": [
+        { "template": "trace-letter", "params": { "letterCase": "both", "guide": "three-line" } }
+      ]
+    },
+    {
+      "code": "A2.3",
+      "overall": "A2",
+      "strand": "Foundations of Language and Mathematics",
+      "label": "Hear, blend and split the sounds in short spoken words",
+      "note": "Paraphrase. The official wording is at sourceUrl. The Ministry continuum includes four-sound words like frog for blending by ear, so blend-word uses them too.",
+      "prerequisites": [],
+      "skills": [
+        { "template": "blend-word", "params": { "patternSet": "taught", "shapes": ["VC", "CV", "CVC", "CCVC", "CVCC"], "continuousFirst": true, "answers": "picture-until-read", "readWhen": { "correctReads": 2, "separateDays": true }, "printWhenRead": "match-word-to-picture" } }
+      ]
+    },
+    {
+      "code": "A2.4",
+      "overall": "A2",
+      "strand": "Foundations of Language and Mathematics",
+      "label": "Match letters to the sounds they make",
+      "note": "Paraphrase. The official wording is at sourceUrl.",
+      "prerequisites": ["A2.1"],
+      "skills": [
+        { "template": "hear-first-sound", "params": { "prompt": "first-sound", "patternSet": "taught" } }
+      ]
+    },
+    {
+      "code": "A2.5",
+      "overall": "A2",
+      "strand": "Foundations of Language and Mathematics",
+      "label": "Read and spell short words from sounds already learned",
+      "note": "Paraphrase. The official wording is at sourceUrl.",
+      "prerequisites": ["A2.3", "A2.4"],
+      "skills": [
+        { "template": "read-cvc", "params": { "patternSet": "taught", "shapes": ["VC", "CV", "CVC"] } },
+        { "template": "spell-cvc", "params": { "patternSet": "taught", "shapes": ["VC", "CV", "CVC"] } }
+      ]
+    },
+    {
+      "code": "A2.6",
+      "overall": "A2",
+      "strand": "Foundations of Language and Mathematics",
+      "label": "Read short sentences made of learned sounds and taught words",
+      "note": "Paraphrase. The official wording is at sourceUrl.",
+      "prerequisites": ["A2.5"],
+      "skills": [
+        { "template": "read-sentence", "params": { "patternSet": "taught", "words": "taught", "maxWords": 6, "shapes": ["VC", "CV", "CVC"] } }
+      ]
+    }
+  ]
+}

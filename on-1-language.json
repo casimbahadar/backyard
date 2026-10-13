@@ -1,0 +1,182 @@
+{
+  "schemaVersion": 1,
+  "jurisdiction": "on",
+  "grade": "1",
+  "subject": "language",
+  "document": "The Ontario Curriculum, Grades 1 to 8: Language (2023)",
+  "sourceUrl": "https://www.dcp.edu.gov.on.ca/en/curriculum/elementary-language/grades/grade-1",
+  "documentUrl": "https://www.dcp.edu.gov.on.ca/en/curriculum/elementary-language/grades/grade-1",
+  "checkedOn": "2026-10-11",
+  "checkedBy": "Opus build session, against the official PDF: The Ontario Curriculum, Grades 1 to 8, Language, 2023 (revised curriculum issued June 2023), downloaded from the Ministry site on 2026-10-11. The word shapes come from the Language Foundations Continuum in the official Kindergarten 2026 PDF, which lists CCVC and CVCC words under Grade 1.",
+  "partial": "Release one carries B2.4 (four-letter and silent-e words), B2.8 (reading sentences) and B3.3 (capitals and end marks). High-frequency words come next.",
+  "taughtSetFrom": "on-k-language",
+  "expectations": [
+    {
+      "code": "B2.4",
+      "overall": "B2",
+      "strand": "Foundations of Language",
+      "label": "Read and spell words by sounding them out",
+      "note": "Paraphrase. The official wording is at sourceUrl. This release covers four-letter words like frog and lamp, and silent-e words like cake and bike.",
+      "follows": "on-k-language/A2.5",
+      "prerequisites": [],
+      "skills": [
+        {
+          "template": "read-cvc",
+          "params": {
+            "patternSet": "taught",
+            "shapes": [
+              "CCVC",
+              "CVCC",
+              "CVCe",
+              "CCVCe"
+            ]
+          }
+        },
+        {
+          "template": "spell-cvc",
+          "params": {
+            "patternSet": "taught",
+            "shapes": [
+              "CCVC",
+              "CVCC",
+              "CVCe",
+              "CCVCe"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "code": "B2.8",
+      "overall": "B2",
+      "strand": "Foundations of Language",
+      "label": "Read short sentences smoothly and accurately",
+      "note": "Paraphrase. The official wording is at sourceUrl. Sentences use every word shape she has learned and her sight words; a quick game practises the sight words on their own.",
+      "follows": "on-k-language/A2.6",
+      "prerequisites": [
+        "B2.4"
+      ],
+      "skills": [
+        {
+          "template": "read-sentence",
+          "params": {
+            "patternSet": "taught",
+            "words": "taught",
+            "maxWords": 6,
+            "shapes": [
+              "VC",
+              "CV",
+              "CVC",
+              "CCVC",
+              "CVCC",
+              "CVCe",
+              "CCVCe"
+            ]
+          }
+        },
+        {
+          "template": "sight-word",
+          "params": {
+            "words": "taught"
+          }
+        }
+      ]
+    },
+    {
+      "code": "B3.3",
+      "overall": "B3",
+      "strand": "Foundations of Language",
+      "label": "Start a sentence with a capital and end it with the right mark",
+      "note": "Paraphrase. The official wording is at sourceUrl. This release covers the first capital, the period and the question mark.",
+      "prerequisites": [
+        "B2.4"
+      ],
+      "skills": [
+        {
+          "template": "fix-sentence",
+          "params": {
+            "shapes": [
+              "VC",
+              "CV",
+              "CVC",
+              "CCVC",
+              "CVCC",
+              "CVCe",
+              "CCVCe"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "taughtSetExtra": {
+    "source": "Grade 1 adds these to the kindergarten letter-sounds, for silent-e words. The Ministry's Kindergarten to Grade 1 continuum lists VCe patterns under Grade 1.",
+    "order": [
+      {
+        "grapheme": "a",
+        "phoneme": "ā",
+        "soundType": "continuous",
+        "position": "vce",
+        "display": "a_e",
+        "note": "a says its name, as in cake"
+      },
+      {
+        "grapheme": "i",
+        "phoneme": "ī",
+        "soundType": "continuous",
+        "position": "vce",
+        "display": "i_e",
+        "note": "i says its name, as in bike"
+      },
+      {
+        "grapheme": "o",
+        "phoneme": "ō",
+        "soundType": "continuous",
+        "position": "vce",
+        "display": "o_e",
+        "note": "o says its name, as in rope"
+      },
+      {
+        "grapheme": "u",
+        "phoneme": "ū",
+        "soundType": "continuous",
+        "position": "vce",
+        "display": "u_e",
+        "note": "u says its name, as in cube"
+      },
+      {
+        "grapheme": "e",
+        "phoneme": "",
+        "soundType": "continuous",
+        "position": "vce",
+        "display": "silent e",
+        "note": "the e at the end that makes no sound"
+      }
+    ]
+  },
+  "taughtWordsExtra": {
+    "source": "Grade 1 high-frequency words, drafted by the build session and approved by Casim and his wife on 2026-10-12. A school's own list replaces it in parent settings.",
+    "words": [
+      "and",
+      "you",
+      "we",
+      "he",
+      "she",
+      "me",
+      "my",
+      "was",
+      "are",
+      "said",
+      "of",
+      "have",
+      "they",
+      "do",
+      "go",
+      "no",
+      "look",
+      "like",
+      "come",
+      "here"
+    ]
+  }
+}

@@ -1,0 +1,5 @@
+@font-face { font-family: "Andika"; src: url("Andika-Regular.ttf") format("truetype"); font-weight: 400; font-display: swap; }
+.pic-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--s4); }
+.pic-card { display: flex; flex-direction: column; align-items: center; gap: var(--s2); padding: var(--s3); border: 2px solid var(--wash); border-radius: var(--r-big); }
+.pic-pair { display: flex; gap: var(--s2); }
+.pic-word { font: 400 24px/1 "Andika", var(--body); }

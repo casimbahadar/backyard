@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 1,
+  "jurisdiction": "on",
+  "grade": "k",
+  "subject": "math",
+  "document": "The Kindergarten Curriculum (2026)",
+  "sourceUrl": "https://www.dcp.edu.gov.on.ca/en/curriculum/kindergarten/grades/jk-sk/kinder-curriculum-at-a-glance",
+  "documentUrl": "https://www.dcp.edu.gov.on.ca/en/curriculum/kindergarten/grades/jk-sk",
+  "checkedOn": "2026-10-11",
+  "checkedBy": "Opus build session, against the official PDF: The Ontario Curriculum, Kindergarten, 2026 (version issued December 2025), downloaded from the Ministry site on 2026-10-11. Every code, number range and named shape here matches the PDF's Curriculum at a glance and Expectations by strand.",
+  "supportingSources": [
+    {
+      "title": "Kindergarten Curriculum (2026): Overall Expectations with Specific Expectations, Kawartha Pine Ridge DSB transcription, retrieved from the Ministry site 5 May 2026",
+      "url": "https://www.kprschools.ca/media/x0yfph5h/kindergarten-overall-expectations-specific-expectations-may6-1.pdf",
+      "usedFor": "Overall expectation titles. Cross-check only. Where it differs from the Ministry page, the Ministry page wins."
+    }
+  ],
+  "expectations": [
+    {
+      "code": "A6.3",
+      "overall": "A6",
+      "strand": "Foundations of Language and Mathematics",
+      "label": "Read and write numbers to 20",
+      "note": "Paraphrase. The official wording is at sourceUrl.",
+      "prerequisites": [],
+      "skills": [
+        { "template": "count-set", "params": { "mode": "how-many", "min": 1, "max": 20 } }
+      ]
+    },
+    {
+      "code": "A6.6",
+      "overall": "A6",
+      "strand": "Foundations of Language and Mathematics",
+      "label": "Tell which group has more, less, or the same",
+      "note": "Paraphrase. The official wording is at sourceUrl. The document sets no range here. A maximum of 10 is this app's choice so the groups stay easy to count.",
+      "prerequisites": ["A6.3"],
+      "skills": [
+        { "template": "compare", "params": { "mode": "sets", "min": 0, "max": 10, "allowEqual": true } }
+      ]
+    },
+    {
+      "code": "A6.8",
+      "overall": "A6",
+      "strand": "Foundations of Language and Mathematics",
+      "label": "Count to 20 by ones, starting from any number",
+      "note": "Paraphrase. The official wording is at sourceUrl.",
+      "prerequisites": ["A6.3"],
+      "skills": [
+        { "template": "count-set", "params": { "mode": "count-on", "min": 0, "max": 20 } }
+      ]
+    },
+    {
+      "code": "A6.10",
+      "overall": "A6",
+      "strand": "Foundations of Language and Mathematics",
+      "label": "Compare any two numbers from 0 to 20",
+      "note": "Paraphrase. The official wording is at sourceUrl.",
+      "prerequisites": ["A6.3"],
+      "skills": [
+        { "template": "compare", "params": { "mode": "numerals", "min": 0, "max": 20, "allowEqual": false } }
+      ]
+    },
+    {
+      "code": "A6.11",
+      "overall": "A6",
+      "strand": "Foundations of Language and Mathematics",
+      "label": "Know adding facts up to 5 and the take-away facts that match them",
+      "note": "Paraphrase. The official wording is at sourceUrl. Read as sums up to 5 and their matching subtractions.",
+      "prerequisites": ["A6.6", "A6.10"],
+      "skills": [
+        { "template": "number-facts", "params": { "ops": ["add", "sub"], "maxTotal": 5 } }
+      ]
+    },
+    {
+      "code": "A7.4",
+      "overall": "A7",
+      "strand": "Foundations of Language and Mathematics",
+      "label": "Carry a pattern on in either direction and find a missing piece",
+      "note": "Paraphrase. The official wording is at sourceUrl.",
+      "prerequisites": [],
+      "skills": [
+        { "template": "pattern-next", "params": { "cores": ["AB", "AAB", "ABB", "ABC"], "direction": "both", "missing": true } }
+      ]
+    },
+    {
+      "code": "A9.1",
+      "overall": "A9",
+      "strand": "Foundations of Language and Mathematics",
+      "label": "Name and sort common flat shapes",
+      "note": "Paraphrase. The official wording is at sourceUrl. The document names circle, hexagon, rhombus and trapezoid. Triangle, square and rectangle are this app's reading of the document's 'most common' shapes.",
+      "prerequisites": [],
+      "skills": [
+        { "template": "name-shape", "params": { "shapes": ["circle", "triangle", "square", "rectangle", "hexagon", "rhombus", "trapezoid"] } }
+      ]
+    }
+  ]
+}

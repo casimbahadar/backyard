@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'">
+<title>Backyard: grown-ups</title>
+<link rel="preload" href="Fredoka.ttf" as="font" type="font/ttf" crossorigin>
+<link rel="preload" href="Andika-Regular.ttf" as="font" type="font/ttf" crossorigin>
+<link rel="preload" href="Andika-Bold.ttf" as="font" type="font/ttf" crossorigin>
+<link rel="stylesheet" href="parent.css">
+<link rel="stylesheet" href="sheet.css">
+</head>
+<body>
+<div class="app-chrome">
+  <main id="main" class="parent"><p>Loading</p></main>
+  <nav id="tabs" class="tabs" hidden aria-label="Grown-ups">
+    <button type="button" data-tab="kids">Kids</button>
+    <button type="button" data-tab="print">Print</button>
+    <button type="button" data-tab="mark">Mark</button>
+    <button type="button" data-tab="results">Results</button>
+    <button type="button" data-tab="settings">Settings</button>
+  </nav>
+</div>
+<div id="print-area"></div>
+<script type="module" src="parent.js"></script>
+</body>
+</html>

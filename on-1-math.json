@@ -1,0 +1,208 @@
+{
+  "schemaVersion": 1,
+  "jurisdiction": "on",
+  "grade": "1",
+  "subject": "math",
+  "document": "The Ontario Curriculum, Grades 1 to 8: Mathematics (2020)",
+  "sourceUrl": "https://www.dcp.edu.gov.on.ca/en/curriculum/elementary-mathematics",
+  "documentUrl": "https://www.dcp.edu.gov.on.ca/en/curriculum/elementary-mathematics",
+  "checkedOn": "2026-10-12",
+  "checkedBy": "Opus build session, against the official PDF: The Ontario Curriculum, Grades 1 to 8, Mathematics, 2020 (version history to February 2024), downloaded from the Ministry site on 2026-10-12. Every code and number range here matches the Grade 1 specific expectations word for word.",
+  "partial": "Grade 1 math as far as release one goes: number, facts, patterns, sorting, measuring and money. Ordering, estimating and adding to 50 come later.",
+  "expectations": [
+    {
+      "code": "B1.1",
+      "overall": "B1",
+      "strand": "Number",
+      "label": "Read and show numbers up to 50",
+      "note": "Paraphrase. The official wording is at sourceUrl. Shown as tens and ones.",
+      "follows": "on-k-math/A6.3",
+      "prerequisites": [],
+      "skills": [
+        {
+          "template": "count-set",
+          "params": {
+            "mode": "tens-ones",
+            "min": 11,
+            "max": 50
+          }
+        }
+      ]
+    },
+    {
+      "code": "B1.5",
+      "overall": "B1",
+      "strand": "Number",
+      "label": "Count to 50 by 1s, 2s, 5s and 10s",
+      "note": "Paraphrase. The official wording is at sourceUrl.",
+      "follows": "on-k-math/A6.8",
+      "prerequisites": [
+        "B1.1"
+      ],
+      "skills": [
+        {
+          "template": "count-set",
+          "params": {
+            "mode": "count-on",
+            "min": 0,
+            "max": 50
+          }
+        },
+        {
+          "template": "count-set",
+          "params": {
+            "mode": "skip",
+            "min": 0,
+            "max": 50,
+            "steps": [
+              2,
+              5,
+              10
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "code": "B1.3",
+      "overall": "B1",
+      "strand": "Number",
+      "label": "Compare whole numbers up to 50",
+      "note": "Paraphrase. The official wording is at sourceUrl. Ordering comes later.",
+      "follows": "on-k-math/A6.10",
+      "prerequisites": [
+        "B1.1"
+      ],
+      "skills": [
+        {
+          "template": "compare",
+          "params": {
+            "mode": "numerals",
+            "min": 0,
+            "max": 50,
+            "allowEqual": false
+          }
+        }
+      ]
+    },
+    {
+      "code": "B2.2",
+      "overall": "B2",
+      "strand": "Number",
+      "label": "Know adding facts up to 10 and the take-away facts that match them",
+      "note": "Paraphrase. The official wording is at sourceUrl. Read as sums up to 10 and their matching subtractions.",
+      "follows": "on-k-math/A6.11",
+      "prerequisites": [],
+      "skills": [
+        {
+          "template": "number-facts",
+          "params": {
+            "ops": [
+              "add",
+              "sub"
+            ],
+            "maxTotal": 10
+          }
+        }
+      ]
+    },
+    {
+      "code": "C1.3",
+      "overall": "C1",
+      "strand": "Algebra",
+      "label": "Use a pattern's rule to carry it on and find a missing piece",
+      "note": "Paraphrase. The official wording is at sourceUrl.",
+      "follows": "on-k-math/A7.4",
+      "prerequisites": [],
+      "skills": [
+        {
+          "template": "pattern-next",
+          "params": {
+            "cores": [
+              "AB",
+              "AAB",
+              "ABB",
+              "ABC",
+              "AABB",
+              "ABCD"
+            ],
+            "direction": "both",
+            "missing": true
+          }
+        }
+      ]
+    },
+    {
+      "code": "E1.1",
+      "overall": "E1",
+      "strand": "Spatial Sense",
+      "label": "Sort shapes and solid objects by one thing they share",
+      "note": "Paraphrase. The official wording is at sourceUrl. Rules used: solid or flat, four sides, rolls or does not roll.",
+      "follows": "on-k-math/A9.1",
+      "prerequisites": [],
+      "skills": [
+        {
+          "template": "belongs",
+          "params": {
+            "rules": [
+              "solid",
+              "four-sides",
+              "rolls",
+              "no-roll"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "code": "E2.2",
+      "overall": "E2",
+      "strand": "Spatial Sense",
+      "label": "Compare everyday things by length, weight and how much they hold",
+      "note": "Paraphrase. The official wording is at sourceUrl. Comparing two at a time; ordering several comes later.",
+      "prerequisites": [],
+      "skills": [
+        {
+          "template": "measure",
+          "params": {
+            "modes": [
+              "length",
+              "mass",
+              "capacity"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "code": "F1.1",
+      "overall": "F1",
+      "strand": "Financial Literacy",
+      "label": "Know Canadian coins and bills, and which is worth more",
+      "note": "Paraphrase. The official wording is at sourceUrl. Coins up to the toonie and bills up to $50. The 50-cent coin and the penny are left out because neither turns up in change.",
+      "prerequisites": [],
+      "skills": [
+        {
+          "template": "money",
+          "params": {
+            "modes": [
+              "find",
+              "more"
+            ],
+            "items": [
+              "nickel",
+              "dime",
+              "quarter",
+              "loonie",
+              "toonie",
+              "five",
+              "ten",
+              "twenty",
+              "fiftyBill"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

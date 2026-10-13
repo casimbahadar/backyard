@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; media-src 'self' blob: data:; font-src 'self'; connect-src 'self'">
+<meta name="robots" content="noindex">
+<title>Record letter sounds</title>
+<link rel="stylesheet" href="parent.css">
+<link rel="stylesheet" href="record-sounds.css">
+</head>
+<body>
+<main class="parent">
+  <h1>Record letter sounds</h1>
+  <p class="help">A one-time job for whoever builds the app. Record each sound, save the file, and upload it to the repo as <code>clips.json</code>, replacing the empty one. Every device then plays these sounds. No parent or teacher needs this page.</p>
+  <p class="help">Say the pure sound, not the letter name: "mmm" for m, not "em". Short sounds like /t/ and /p/ are quick puffs with no "uh" after them. A quiet room helps.</p>
+  <p id="progress" class="week" role="status"></p>
+  <ol id="list" class="rec-list"></ol>
+  <button id="export" class="btn" type="button">Save clips.json</button>
+  <p id="status" class="status" role="status"></p>
+</main>
+<script type="module" src="record-sounds.js"></script>
+</body>
+</html>

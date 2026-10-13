@@ -1,0 +1,70 @@
+@font-face { font-family: "Fredoka"; src: url("Fredoka.ttf") format("truetype"); font-weight: 300 700; font-display: block; }
+/* Worksheet look: Letter, portrait, ink-light. Black outlines on white, nothing
+   filled, so sheets print cheaply and the shapes can be coloured in. */
+@font-face { font-family: "Andika"; src: url("Andika-Regular.ttf") format("truetype"); font-weight: 400; font-display: block; }
+@font-face { font-family: "Andika"; src: url("Andika-Bold.ttf") format("truetype"); font-weight: 700; font-display: block; }
+
+@page { size: letter portrait; margin: 0.5in; }
+
+.sheet { font-family: "Andika", sans-serif; color: #000; background: #fff; width: 7.5in; box-sizing: border-box; }
+.sheet + .sheet { break-before: page; margin-top: 0.5in; }
+.sheet-head { display: flex; gap: 0.18in; align-items: center; font-size: 12pt; border-bottom: 2pt solid #000; padding-bottom: 0.1in; margin-bottom: 0.18in; }
+.sheet-badge { flex: none; display: inline-flex; }
+.head-lines { display: flex; flex-direction: column; gap: 0.06in; flex: 1; min-width: 0; }
+.skill-title { font-family: "Fredoka", "Andika", sans-serif; font-weight: 600; font-size: 14pt; }
+.head-fields { display: flex; gap: 0.3in; align-items: baseline; }
+.sheet-head .name-line, .sheet-head .line { display: inline-block; min-width: 2.1in; border-bottom: 1pt solid #000; padding: 0 0.05in; }
+.sheet-head .line { min-width: 1.3in; }
+.sheet-id { flex: none; font-weight: 700; letter-spacing: 0.04em; border: 1.5pt solid #000; border-radius: 1in; padding: 0.04in 0.14in; }
+.done-row { display: flex; align-items: center; justify-content: flex-end; gap: 0.12in; margin: 0.18in 0 0; font-family: "Fredoka", "Andika", sans-serif; font-size: 14pt; break-inside: avoid; }
+.done-stars { display: inline-flex; gap: 0.06in; }
+.key-title { font-weight: 700; font-size: 15pt; }
+
+.items { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0.2in 0.3in; }
+.item { break-inside: avoid; display: flex; gap: 0.12in; align-items: flex-start; padding: 0.12in; border: 1.5pt solid #000; border-radius: 0.16in; min-height: 1.1in; overflow: hidden; }
+.item[data-kind="trace-letter"], .item[data-kind="sentence-circle-picture"], .item[data-kind="pattern-draw"], .item[data-kind="match-word-to-picture"] { grid-column: 1 / -1; min-height: 0; }
+.num { flex: none; width: 0.32in; height: 0.32in; border: 1.5pt solid #000; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12pt; }
+.item-body { display: flex; flex-wrap: wrap; gap: 0.12in; align-items: center; min-width: 0; }
+
+.outline { fill: none; stroke: #000; stroke-width: 3; stroke-linejoin: round; }
+.counters { display: flex; flex-wrap: wrap; gap: 0.04in; max-width: 2.6in; }
+.sheet .group { padding: 0.06in; border: 1pt dashed #000; border-radius: 0.1in; }
+.pill { border: 1.5pt solid #000; border-radius: 1in; padding: 0.04in 0.14in; font-size: 13pt; }
+.big { font-size: 28pt; line-height: 1; }
+.sheet .row { display: flex; flex-wrap: wrap; gap: 0.14in; align-items: center; }
+.letter { font-size: 30pt; min-width: 0.55in; text-align: center; }
+.word { font-size: 26pt; }
+.sentence { font-size: 22pt; flex-basis: 100%; }
+.blank { display: inline-block; height: 0.5in; border-bottom: 1.5pt solid #000; }
+.blank-sm { width: 0.55in; } .blank-md { width: 0.8in; }
+.pic-sm { width: 0.8in; height: 0.8in; } .pic-md { width: 1in; height: 1in; } .pic-lg { width: 1.3in; height: 1.3in; }
+.blank-cell { display: inline-block; width: 0.5in; height: 0.5in; border: 1.5pt dashed #000; border-radius: 0.08in; }
+.pic-frame { display: inline-flex; align-items: flex-end; justify-content: center; border: 1.5pt dashed #000; border-radius: 0.12in; box-sizing: border-box; padding: 0.04in; }
+.pic-frame span { font-family: system-ui, sans-serif; font-size: 7pt; color: #555; }
+.match { display: flex; gap: 0.8in; width: 100%; }
+.match .col { display: flex; flex-direction: column; gap: 0.12in; }
+
+/* Tall three-line guide for kindergarten printing: top line, dashed middle, baseline. */
+.trace-row .guide { stroke: #000; stroke-width: 1.2; }
+.trace-row .guide.mid { stroke-dasharray: 6 6; stroke-width: 1; }
+.trace-row .guide.base { stroke-width: 1.8; }
+.trace-row text { font-family: "Andika", sans-serif; fill: none; stroke: #000; stroke-width: 1.4; stroke-dasharray: 4 3; }
+
+.key-note { font-size: 11pt; margin: 0 0 0.15in; }
+.key-items { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.12in; font-family: system-ui, sans-serif; font-size: 11pt; }
+.key-item { display: flex; gap: 0.12in; break-inside: avoid; }
+.key-item > span:last-child { display: flex; flex-direction: column; gap: 0.02in; }
+.ans { font-weight: 700; }
+.pics { color: #333; }
+.sheet-foot { margin-top: 0.2in; padding-top: 0.08in; border-top: 1pt solid #000; font-family: system-ui, sans-serif; font-size: 8pt; overflow-wrap: anywhere; }
+
+@media print {
+  .app-chrome { display: none !important; }
+  .sheet + .sheet { margin-top: 0; }
+}
+
+.ribbons { display: flex; flex-direction: column; gap: 0.15in; }
+.belong-group { display: flex; gap: 0.08in; padding: 0.06in 0.1in; border: 1.5pt dashed #000; border-radius: 0.15in; }
+.sentences { display: flex; flex-direction: column; gap: 0.12in; }
+.sentence-line { font-size: 20pt; }
+.item[data-kind="circle-sentence"] { grid-column: 1 / -1; min-height: 0; }

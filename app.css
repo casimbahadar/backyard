@@ -1,0 +1,174 @@
+/* Child app, Bright theme. The idea: she plays inside her yard, and everything she
+   can tap is a sticker (white die-cut edge, lifted on a solid base) sitting on a flat
+   printed scene. Only tappable things get the lift, so the lift means "tap me".
+   Calm and Clear themes arrive in milestone 7 by swapping these tokens. */
+@font-face { font-family: "Andika"; src: url("Andika-Regular.ttf") format("truetype"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Fredoka"; src: url("Fredoka.ttf") format("truetype"); font-weight: 300 700; font-display: swap; }
+
+:root {
+  --sky: #a7dcf7; --sun: #ffc845; --hill: #9fd77f; --meadow: #6dbb4f; --leaf: #4fa53e; --leaf-dark: #2f7a2a;
+  --bark: #8a5a2b; --wood: #d9934a; --roof: #e2533a; --path: #f0d79c;
+  --tomato: #d4441f; --tomato-base: #9e2f14; --petal: #ef5a3c; --ink: #23304a; --paper: #ffffff; --base: #a9bccd; --right: #2f7a2a; --wrong: #8d2a1a;
+  --type-scale: 1; --stroke: 0px;
+  --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s6: 24px; --s8: 32px; --s12: 48px;
+  --r-small: 12px; --r-tile: 22px; --r-round: 999px;
+  --tap: 160ms;
+  --display: "Fredoka", "Andika", system-ui, sans-serif;
+  --reading: "Andika", system-ui, sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body { height: 100%; }
+body { margin: 0; background: var(--sky); color: var(--ink); font: calc(18px * var(--type-scale))/1.4 var(--reading); -webkit-tap-highlight-color: transparent; }
+#app { min-height: 100dvh; display: flex; flex-direction: column; }
+main { flex: 1; display: flex; flex-direction: column; width: 100%; max-width: 560px; margin: 0 auto;
+  padding: calc(var(--s4) + env(safe-area-inset-top, 0px)) var(--s4) calc(var(--s4) + env(safe-area-inset-bottom, 0px)); }
+h1, .title { font-family: var(--display); font-weight: 600; }
+.loading { padding: var(--s6); font-family: var(--display); }
+
+/* ---------- the button system ---------- */
+.btn { font: 600 1.25rem/1 var(--display); min-height: 56px; border: 0; border-radius: var(--r-tile); background: var(--paper); color: var(--ink);
+  padding: 0 var(--s6); cursor: pointer; box-shadow: 0 5px 0 var(--base); transition: transform var(--tap), box-shadow var(--tap); touch-action: manipulation; }
+.btn:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--base); }
+.btn:disabled { opacity: 0.5; cursor: default; transform: none; }
+.btn:focus-visible, .play-sticker:focus-visible, .grownups:focus-visible { outline: 4px solid var(--ink); outline-offset: 4px; }
+.btn-play { background: var(--tomato); color: var(--paper); box-shadow: 0 5px 0 var(--tomato-base); width: 100%; min-height: 64px; font-size: 1.5rem; }
+.btn-play:active { box-shadow: 0 2px 0 var(--tomato-base); }
+.btn-icon { width: 56px; padding: 0; display: inline-flex; align-items: center; justify-content: center; flex: none; }
+
+/* The Play sticker: the one big thing on the yard. */
+.play-sticker { width: 168px; height: 168px; border-radius: 50%; border: 7px solid var(--paper); background: var(--tomato); color: var(--paper);
+  font: 700 2.4rem/1 var(--display); display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--s1);
+  transform: rotate(-5deg); box-shadow: 0 9px 0 rgba(35, 48, 74, 0.28); cursor: pointer; transition: transform var(--tap), box-shadow var(--tap); touch-action: manipulation; }
+.play-sticker:active { transform: rotate(-5deg) translateY(5px); box-shadow: 0 4px 0 rgba(35, 48, 74, 0.28); }
+.play-sticker:disabled { opacity: 0.5; }
+
+/* ---------- first run ---------- */
+.first-run { gap: var(--s4); }
+.first-scene { height: 168px; margin: calc(-1 * var(--s4) - env(safe-area-inset-top, 0px)) calc(-1 * var(--s4)) 0; overflow: hidden; }
+.first-scene .scene-art { width: 100%; height: 100%; display: block; }
+.first-run .title { font-size: 2.75rem; line-height: 1; margin: var(--s2) 0 var(--s2); }
+.name-tag { display: block; background: var(--paper); border-radius: var(--r-tile); overflow: hidden; box-shadow: 0 5px 0 var(--base); }
+.name-tag-top { display: block; background: var(--tomato); color: var(--paper); font: 600 1.15rem/1 var(--display); padding: var(--s3) var(--s4); text-align: center; }
+.name-input { display: block; width: 100%; border: 0; font: 2rem/1.2 var(--reading); color: var(--ink); text-align: center; padding: var(--s4) var(--s4) var(--s6); background: transparent; }
+.name-input:focus-visible { outline: none; box-shadow: inset 0 -4px 0 var(--tomato); }
+.grades { border: 0; padding: 0; margin: var(--s2) 0; }
+.grades legend { font: 600 1.15rem/1 var(--display); margin-bottom: var(--s3); }
+.grade-row { display: flex; gap: var(--s3); }
+.btn-grade { flex: 1; min-height: 72px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--s1); font-size: 1.75rem; padding: var(--s2); }
+.btn-grade[aria-pressed="true"] { background: var(--ink); color: var(--paper); box-shadow: 0 5px 0 #0f1626; }
+.later { font: 400 0.875rem/1 var(--reading); }
+
+/* ---------- picker ---------- */
+.picker { gap: var(--s6); justify-content: center; }
+.picker .title { font-size: 2.25rem; text-align: center; margin: 0; }
+.picker-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s4); }
+.face { min-height: 168px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--s3); font-size: 1.4rem; }
+.face-initial { width: 76px; height: 76px; border-radius: 50%; background: var(--sun); border: 5px solid var(--paper); box-shadow: 0 0 0 2px var(--ink); display: flex; align-items: center; justify-content: center; font: 700 2.2rem/1 var(--display); }
+
+/* ---------- yard ---------- */
+.yard { position: relative; max-width: none; padding: 0; min-height: 100dvh; }
+/* The drawing keeps its proportions and sits on the bottom edge; sky above it and a
+   strip of meadow behind it carry the scene to any screen shape. */
+.yard-scene { position: absolute; inset: 0; overflow: hidden; touch-action: none; background: linear-gradient(var(--sky) 0 70%, var(--meadow) 70%); }
+.yard-scene .scene-art { position: absolute; inset: 0; width: 100%; height: 100%; overflow: hidden; }
+.yard-top { position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: center;
+  padding: calc(var(--s3) + env(safe-area-inset-top, 0px)) var(--s4) 0; }
+.goal { display: flex; gap: var(--s1); align-items: center; background: var(--paper); border-radius: var(--r-round); padding: var(--s1) var(--s3); }
+.dot { display: inline-flex; }
+.grownups { font: 500 1rem/1 var(--display); color: var(--ink); background: rgba(255, 255, 255, 0.85); border-radius: var(--r-round); padding: 0 var(--s4); min-height: 44px; display: inline-flex; align-items: center; text-decoration: none; }
+.yard-bottom { position: relative; z-index: 2; margin-top: auto; display: flex; justify-content: center; padding: 0 var(--s4) calc(var(--s12) + env(safe-area-inset-bottom, 0px)); pointer-events: none; }
+.yard-bottom > * { pointer-events: auto; }
+.placed, .held { position: absolute; transform: translate(-50%, -50%); z-index: 1; }
+.held { pointer-events: none; z-index: 3; }
+.held.lifted .sticker { filter: drop-shadow(0 8px 6px rgba(35, 48, 74, 0.35)); transform: scale(1.08); }
+.note { background: var(--paper); border-radius: var(--r-tile); padding: var(--s4); text-align: center; }
+.placing .yard-scene { cursor: copy; }
+.place-line { position: relative; z-index: 2; margin: calc(var(--s4) + env(safe-area-inset-top, 0px)) auto 0; background: var(--paper); border-radius: var(--r-round); padding: var(--s3) var(--s6); font: 600 1.35rem/1 var(--display); }
+
+/* ---------- quest ---------- */
+.quest { gap: var(--s4); padding-bottom: 0; }
+.quest-top { display: flex; align-items: center; gap: var(--s3); }
+.progress { flex: 1; display: flex; justify-content: space-between; align-items: flex-end; background: var(--paper); border-radius: var(--r-round); padding: var(--s1) var(--s3); min-height: 44px; }
+.pip { display: inline-flex; }
+.stage { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: var(--s2); min-height: 132px; background: var(--paper); border-radius: var(--r-tile); padding: var(--s4); }
+.stage.seq, .stage.eq { font: 3.25rem/1 var(--reading); white-space: pre; }
+.stage .gap { display: block; border: 4px dashed var(--ink); border-radius: var(--r-small); }
+.stage.pattern { display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: var(--s1); justify-items: center; }
+.stage.pattern svg, .stage.pattern .gap { width: 100%; max-width: 52px; height: auto; aspect-ratio: 1; }
+.counters { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s1); max-width: 320px; }
+.stage.reading { font: 3.4rem/1 var(--reading); }
+.stage.reading.sentence { font-size: 2rem; line-height: 1.3; text-align: center; }
+.btn-listen { width: 120px; height: 120px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; }
+.btn-listen svg { width: 56px; height: 56px; }
+.choice.pic { padding: var(--s2); }
+.choice.pic .picture { width: 100%; max-width: 104px; height: auto; }
+.choice.pic .scene { max-width: 160px; }
+.choice.word { font: 400 2.4rem/1 var(--reading); }
+.stage.group { border: 4px dashed var(--base); }
+.answers .choices.stack { grid-template-columns: minmax(0, 1fr); }
+.ribbon-choice { justify-content: flex-start; padding: var(--s3) var(--s4); }
+.ribbon-choice .ribbon { max-width: 100%; height: auto; }
+.sentence-choice { font: 400 1.6rem/1.2 var(--reading); min-height: 72px; justify-content: flex-start; padding: var(--s3) var(--s4); text-align: left; }
+.money-choice .money { width: 100%; max-width: 132px; height: auto; }
+.prompt { text-align: center; font: 1.5rem/1.3 var(--reading); margin: 0; }
+.answers { margin: auto calc(-1 * var(--s4)) 0; padding: var(--s8) var(--s4) calc(var(--s8) + env(safe-area-inset-bottom, 0px)); background: var(--meadow); border-radius: 48px 48px 0 0; }
+.choices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s4); }
+.choices.n3 { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s3); }
+.choice { position: relative; min-height: 104px; display: flex; align-items: center; justify-content: center; padding: var(--s2); }
+.choice.num, .choice.letter { font: 400 3rem/1 var(--reading); }
+.choice.right { box-shadow: 0 0 0 5px var(--right), 0 5px 0 5px var(--right); }
+.choice.wrong { opacity: 0.55; box-shadow: 0 2px 0 var(--base); transform: translateY(3px); }
+.badge { position: absolute; top: -14px; right: -10px; }
+.tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s3); }
+.tiles .choice { min-height: 80px; }
+.slots { display: flex; justify-content: center; gap: var(--s3); margin-bottom: var(--s6); }
+.slot { width: 64px; height: 76px; background: var(--paper); border-radius: var(--r-small); border-bottom: 5px solid var(--ink); font: 3rem/76px var(--reading); text-align: center; }
+.slot.fixed { color: var(--right); border-bottom-color: var(--right); }
+
+/* ---------- endings ---------- */
+.quest-end, .pick, .goal-moment { align-items: center; justify-content: center; text-align: center; gap: var(--s6); }
+.stars { display: flex; gap: var(--s3); min-height: 80px; }
+.star { display: inline-flex; }
+.star.on { transform: rotate(-6deg); }
+.end-line { font: 600 1.75rem/1.2 var(--display); margin: 0; }
+.pick .choices { width: 100%; }
+.sticker-choice { min-height: 132px; padding: var(--s2); }
+.sticker-choice .sticker { width: 100%; max-width: 96px; height: auto; }
+.goal-moment .stars svg { transform: rotate(-8deg); }
+
+@media (min-width: 720px) {
+  .first-scene { height: 220px; }
+  .play-sticker { width: 200px; height: 200px; font-size: 2.8rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn, .play-sticker { transition: none; }
+  .btn:active, .play-sticker:active { transform: none; }
+}
+
+/* ---------- themes ----------
+   Calm: the same hues, less saturated, on a softer page, for evenings and for children
+   who find Bright too much. Clear: high contrast, larger type, ink outlines on every
+   tappable thing, no motion. Clear keeps Andika: it is already built for beginning
+   and struggling readers, and its single-storey a matches what she sees at school. */
+[data-theme="calm"] {
+  --sky: #cfe3ec; --sun: #f0d590; --hill: #c4dcb4; --meadow: #a3c68f; --leaf: #87b277; --leaf-dark: #557f4c;
+  --bark: #8f6b4a; --wood: #d1aa82; --roof: #c48a76; --path: #ece2c9;
+  --tomato: #b5533d; --tomato-base: #7e3627; --petal: #c97a66; --ink: #2f3a4f; --paper: #fbfaf6; --base: #c3ccd4; --right: #3f7a3a;
+}
+[data-theme="clear"] {
+  --sky: #e6f2f8; --sun: #f2c230; --hill: #cfe6bf; --meadow: #b8dba3; --leaf: #2f7a2a; --leaf-dark: #1d4f1a;
+  --bark: #5b3a1c; --wood: #e8b47e; --roof: #a3221a; --path: #f3e6c4;
+  --tomato: #a3221a; --tomato-base: #111111; --petal: #a3221a; --ink: #111111; --paper: #ffffff; --base: #111111; --right: #1d5e1a;
+  --type-scale: 1.2; --stroke: 3px; --tap: 0ms;
+}
+[data-theme="clear"] .btn, [data-theme="clear"] .name-tag, [data-theme="clear"] .stage, [data-theme="clear"] .progress,
+[data-theme="clear"] .goal, [data-theme="clear"] .slot, [data-theme="clear"] .grownups { box-shadow: inset 0 0 0 var(--stroke) var(--ink); }
+[data-theme="clear"] .btn:active { transform: none; }
+[data-theme="clear"] .choice.right { box-shadow: inset 0 0 0 var(--stroke) var(--ink), 0 0 0 6px var(--right); }
+[data-theme="clear"] .choice.wrong { opacity: 1; box-shadow: inset 0 0 0 var(--stroke) var(--ink); text-decoration: line-through; }
+[data-theme="clear"] .prompt { font-size: 1.75rem; letter-spacing: 0.02em; }
+[data-theme="clear"] .choice.num, [data-theme="clear"] .choice.letter { font-size: 3.4rem; }
+[data-theme="clear"] .play-sticker, [data-theme="clear"] .star.on, [data-theme="clear"] .goal-moment .stars svg { transform: none; }
+[data-theme="clear"] .play-sticker { box-shadow: 0 0 0 4px var(--ink); }
+[data-theme="clear"] * { transition: none !important; animation: none !important; }
